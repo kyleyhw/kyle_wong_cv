@@ -1,0 +1,242 @@
+% Document class and font size
+\documentclass[a4paper,10pt]{extarticle}
+
+% Packages
+\usepackage[utf8]{inputenc} % For input encoding
+\usepackage{geometry} % For page margins
+\geometry{letterpaper, margin=0.75in} % Set paper size and margins
+\usepackage{titlesec} % For section title formatting
+\usepackage{enumitem} % For itemized list formatting
+\usepackage{hyperref} % For hyperlinks
+\usepackage{tabularx}
+\usepackage{fancyhdr}
+
+% Formatting
+\setlist{noitemsep} % Removes item separation
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}[\titlerule] % Section title format
+\titlespacing*{\section}{0pt}{\baselineskip}{\baselineskip} % Section title spacing
+\setlength{\parindent}{0pt} % Removes indent
+%%%%%%%%%%
+
+% Begin document
+\begin{document}
+
+% Disable page numbers
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead{}
+\fancyhead[L]{\textit{Kyle Wong}}
+\fancyhead[R]{\textit{January 2024}}
+\thispagestyle{empty} % Remove header from the first page
+
+% Header
+\begin{flushleft}
+\textbf{\LARGE Kyle Wong}\\[2pt] % Name
+MASt student at Sidney Sussex College, University of Cambridge
+\\ {CRSid: kyhw2} \\
+\href{mailto:kyleyh.wong@mail.utoronto.ca}{Email: kyhw2@cam.ac.uk} % Contact info
+\end{flushleft}
+
+% Education Section
+\section*{EDUCATION}
+\textbf{Sidney Sussex College, University of Cambridge}, Cambridge, England, United Kingdom \hfill 2024 | present\\
+Expected Degree: Master of Advanced Study (MASt) in Astrophysics\\
+Expected time of completion: June 2025\\
+
+
+
+\textbf{Victoria College, University of Toronto}, Toronto, Ontario, Canada \hfill 2020 | 2024\\ % University name and location
+Honours Bachelor of Science (HBSc)\\
+Programs: Physics Specialist (ASSPE1944), Mathematics Major (ASMAJ1165)\\ 
+Graduated with High Distinction\\
+
+
+\textbf{German Swiss International School}, Hong Kong SAR \hfill 2010 | 2020\\ % University name and location
+International Baccalaureate (IB) in 6 subjects\\
+International Advanced Subsidiary (AS) level in 1 subject\\
+International General Certificate of Secondary Education (IGCSE) in 12 subjects
+
+% Experience Section
+\section*{RESEARCH EXPERIENCE}
+
+\textbf{Canadian Institute for Theoretical Astrophysics\\
+    Summer Undergraduate Research Fellowship} \hfill Toronto, Ontario, Canada\\
+\textit{Undergraduate Researcher} \hfill May 2023 | present\\
+Supervised by Dr. Philippe Landry at the Canadian Institute for Theoretical Astrophysics
+\begin{itemize}
+    \item Research topic: probing neutron star tidal deformability from gravitational wave signals using Markov chain Monte Carlo (MCMC) machine learning parameter estimation, and incorporating new models for neutron star equation of state correlations in the analysis pipeline of Laser Interferometer Gravitational-Wave Observatory (LIGO) Scientific Collaboration gravitational wave data
+
+    \item Relevant skills: simulation, MCMC, Bayesian inference, working with supercomputing clusters
+\end{itemize}
+
+ 
+\textbf{McGill Space Institute Summer Undergraduate Research Award} \hfill Montreal, Quebec, Canada\\
+\textit{Undergraduate Researcher} \hfill May 2022 | April 2023\\
+Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill Space Institute) of McGill University
+\begin{itemize}
+    \item Research topic: incorporating statistical priors into the power spectrum data estimator used in the data pipeline, for analysis of radio astronomy data from the Hydrogen Epoch of Reionization Array (HERA) collaboration's cosmic dawn experiment, using the Python programming language
+
+
+    \item Relevant skills: simulation, Fourier transform, radio astronomy, radio frequency interference
+\end{itemize}
+
+\section*{HONOURS, AWARDS AND SCHOLARSHIPS}
+\begin{itemize}
+    \item Canadian Institute for Theoretical Astrophysics \\
+    Summer Undergraduate Research Fellowship (CITA SURF) \hfill 9,500 CAD, 2023
+    
+    \item Birkenshaw Family Scholarship II \hfill 1,000 CAD, 2023
+
+    \item Dean's List Scholar in the Faculty of Arts \& Science \hfill 2022, 2023, 2024
+
+    \item McGill Space Institute (now Trottier Space Institute) \\Summer Undergraduate Research Award (MSI SURA) \hfill 7,000 CAD, 2022
+
+    \item David and Louise Fraser Scholarship \hfill 2,500 CAD, 2022
+
+    \item University of Toronto Scholar \hfill 1,500 CAD, 2022
+
+    \item Birkenshaw Family Scholarship \hfill 1,000 CAD, 2022
+
+    \item Received offer for University of Toronto \\Natalia Krasnopolskaia Memorial Summer Undergraduate Research Fellowship \\(declined due to commitment with MSI SURA) \hfill 2022
+\end{itemize}
+
+\newpage
+% Skills Section
+\section*{SKILLS}
+\begin{itemize}
+    \item Scientific programming with Python and Java, with emphasis on design
+
+    \item Multi-dimensional data visualization
+
+    \item Data analysis techniques including fast Fourier transform and numerical methods such as differentiation, integration, root finding, solutions to ordinary/partial differential equations, Monte-Carlo methods
+
+    \item Symbolic computing
+
+    \item Extensive use of the Bilby parameter estimation library (authored by the LIGO Scientific Collaboration)
+\end{itemize}
+
+\section*{PRESENTATIONS}
+\begin{itemize}
+    \item \textit{Estimating Neutron Star Tidal Deformability}, at the CITA Undergraduate Research Showcase \hfill 2023
+
+    \item Two presentations given at the CITA Compact Objects Group, as part of PHY478 Physics Project \hfill 2023
+\end{itemize}
+
+\section*{SELECTED COURSES}
+\begin{itemize}
+    \item General Relativity (APM426) \hfill A (Winter 2024)
+    
+    \item Relativity Theory II (PHY484) \hfill A (Winter 2024)
+
+    \item Relativity Theory I (PHY483) \hfill A+ (Fall 2023)
+
+    \item Physics Project (a continuation of CITA SURF) (PHY478) \hfill A+ (Fall 2023)
+
+    \item Computational Physics (PHY407) \hfill A+ (Fall 2023)
+
+    \item Computational Astrophysics (CTA200H) \hfill Audited (Summer 2023)
+
+    \item Advanced Classical Mechanics (PHY354) \hfill A+ (Winter 2023)
+
+    \item Geometry of Curves and Surfaces (MAT363) \hfill A+ (Winter 2023)
+\end{itemize}
+
+\section*{RESEARCH INTERESTS}
+\begin{itemize}
+    \item Gravitation
+
+    \item Cosmology
+
+    \item Black holes, compact objects
+
+    \item Dark matter, dark energy
+
+    \item Quantum mechanics
+
+    \item Computational data analysis
+
+    \item Simulation programming
+
+    \item Machine learning, artificial intelligence
+\end{itemize}
+
+% Experiences Section
+\section*{RELEVANT EXPERIENCE}
+\begin{itemize}
+    \item Attended 1-week HERA collaboration astrophysics bootcamp, hosted at the University of Pennsylvania \hfill 2022
+
+    \item Tutored high-school students in physics \& mathematics \hfill 2020 | 2022, 2024 | present
+\end{itemize}
+
+\section*{LANGUAGES}
+\begin{itemize}
+    \item English (fluent, language of education)
+
+    \item Cantonese (fluent, mother tongue)
+
+    \item Mandarin (formally learned 10 years)
+
+    \item German (formally learned 10 years)
+\end{itemize}
+
+\section*{CITIZENSHIPS}
+\begin{itemize}
+    \item United States of America (US)
+
+    \item Hong Kong SAR (HK)
+\end{itemize}
+
+\newpage
+\section*{VOLUNTEERING}
+\begin{itemize}
+    \item Volunteered for RiseWise HK, serving as an assistant soccer coach for children with special educational needs
+
+    \item Travelled to Chiang Mai, Thailand to physically contribute to the construction of a school
+
+    \item Undertook training and assisted with a public astronomical observing night at McGill University
+\end{itemize}
+
+\section*{MEMBERSHIPS}
+\begin{itemize}
+    \item University of Toronto Physics Student Union
+
+    \item University of Toronto Rock Climbing Club
+
+    \item University of Toronto Hart House Chess Club
+
+    \item University of Toronto Hong Kong Student Association
+
+    \item University of Toronto Hide and Seek Club
+
+    \item Victoria College Intramural Soccer Team (11 vs 11)
+
+    \item Victoria College Intramural Soccer Team (6 vs 6)
+\end{itemize}
+
+\section*{PERSONAL INTERESTS}
+\begin{itemize}
+    \item Rock climbing (both outdoors and indoors, with awards won at amateur, inter-high-school and inter-university competitions. Also led a rock climbing extra-curricular activity during high school, including captaining the school team at a competition)
+
+    \item Soccer (5+ years league participation)
+
+    \item Scuba diving (PADI open water certified)
+
+    \item Traveling
+\end{itemize}
+
+% \section*{OTHER CERTIFICATIONS}
+% \begin{itemize}
+%     \item Rock climbing level 1
+
+%     \item German Deutsches Sprachdiplom
+
+%     \item PADI Open Water Diver
+
+%     \item ABRSM Piano Grade 8
+
+%     \item ABRSM Music Theory Grade 5
+% \end{itemize}
+
+
+% End document
+\end{document}
