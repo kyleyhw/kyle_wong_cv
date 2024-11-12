@@ -10,12 +10,15 @@
 \usepackage{hyperref} % For hyperlinks
 \usepackage{tabularx}
 \usepackage{fancyhdr}
+\usepackage{datetime}
 
 % Formatting
 \setlist{noitemsep} % Removes item separation
 \titleformat{\section}{\large\bfseries}{\thesection}{1em}{}[\titlerule] % Section title format
 \titlespacing*{\section}{0pt}{\baselineskip}{\baselineskip} % Section title spacing
 \setlength{\parindent}{0pt} % Removes indent
+\newdateformat{monthyeardate}{% Date formatting for header
+  \monthname[\THEMONTH] \THEYEAR}
 %%%%%%%%%%
 
 % Begin document
@@ -26,13 +29,13 @@
 \renewcommand{\headrulewidth}{0pt}
 \fancyhead{}
 \fancyhead[L]{\textit{Kyle Wong}}
-\fancyhead[R]{\textit{January 2024}}
+\fancyhead[R]{\textit{\monthyeardate\today}}
 \thispagestyle{empty} % Remove header from the first page
 
 % Header
 \begin{flushleft}
 \textbf{\LARGE Kyle Wong}\\[2pt] % Name
-MASt student at Sidney Sussex College, University of Cambridge
+Postgraduate student at Sidney Sussex College, University of Cambridge
 \\ {CRSid: kyhw2} \\
 \href{mailto:kyleyh.wong@mail.utoronto.ca}{Email: kyhw2@cam.ac.uk} % Contact info
 \end{flushleft}
@@ -40,7 +43,7 @@ MASt student at Sidney Sussex College, University of Cambridge
 % Education Section
 \section*{EDUCATION}
 \textbf{Sidney Sussex College, University of Cambridge}, Cambridge, England, United Kingdom \hfill 2024 | present\\
-Expected Degree: Master of Advanced Study (MASt) in Astrophysics\\
+Master of Advanced Study (MASt) in Astrophysics\\
 Expected time of completion: June 2025\\
 
 
@@ -58,15 +61,23 @@ International General Certificate of Secondary Education (IGCSE) in 12 subjects
 
 % Experience Section
 \section*{RESEARCH EXPERIENCE}
+\textbf{Master's of Advanced Study Project} \hfill Cambridge, England, United Kingdom\\
+\textit{Postgraduate Student} \hfill October 2024 | present\\
+Supervised by Prof. Anastasia Fialkov at the Institute of Astronomy, University of Cambridge
+\begin{itemize}
+    \item Research topic: implementation of variable initial conditions (cosmologies) and variable resolution in 21cmSPACE code for simulating the distribution of hydrogen gas clouds from in the early universe, making possible efficient forecasting of future radio astronomy experiments, most notably the Square Kilometre Array (SKA)
+    
+    \item Relevant skills: simulation, MATLAB, high performance computing, data visualization, cosmology
+\end{itemize}
 
 \textbf{Canadian Institute for Theoretical Astrophysics\\
     Summer Undergraduate Research Fellowship} \hfill Toronto, Ontario, Canada\\
-\textit{Undergraduate Researcher} \hfill May 2023 | present\\
+\textit{Undergraduate Researcher} \hfill May 2023 | December 2023\\
 Supervised by Dr. Philippe Landry at the Canadian Institute for Theoretical Astrophysics
 \begin{itemize}
     \item Research topic: probing neutron star tidal deformability from gravitational wave signals using Markov chain Monte Carlo (MCMC) machine learning parameter estimation, and incorporating new models for neutron star equation of state correlations in the analysis pipeline of Laser Interferometer Gravitational-Wave Observatory (LIGO) Scientific Collaboration gravitational wave data
 
-    \item Relevant skills: simulation, MCMC, Bayesian inference, working with supercomputing clusters
+    \item Relevant skills: simulation, MCMC, Bayesian inference, high performance computing
 \end{itemize}
 
  
@@ -76,10 +87,11 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 \begin{itemize}
     \item Research topic: incorporating statistical priors into the power spectrum data estimator used in the data pipeline, for analysis of radio astronomy data from the Hydrogen Epoch of Reionization Array (HERA) collaboration's cosmic dawn experiment, using the Python programming language
 
-
     \item Relevant skills: simulation, Fourier transform, radio astronomy, radio frequency interference
 \end{itemize}
 
+
+\newpage
 \section*{HONOURS, AWARDS AND SCHOLARSHIPS}
 \begin{itemize}
     \item Canadian Institute for Theoretical Astrophysics \\
@@ -100,11 +112,10 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
     \item Received offer for University of Toronto \\Natalia Krasnopolskaia Memorial Summer Undergraduate Research Fellowship \\(declined due to commitment with MSI SURA) \hfill 2022
 \end{itemize}
 
-\newpage
 % Skills Section
 \section*{SKILLS}
 \begin{itemize}
-    \item Scientific programming with Python and Java, with emphasis on design
+    \item Scientific object oriented programming with Python, MATLAB, and Java, placing emphasis on design and coding practices
 
     \item Multi-dimensional data visualization
 
@@ -113,16 +124,34 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
     \item Symbolic computing
 
     \item Extensive use of the Bilby parameter estimation library (authored by the LIGO Scientific Collaboration)
+
+    \item Extensive use of the 21cmSPACE, CAMB, and RecFAST cosmological simulation packages (authored by the Cosmic Dawn Group at the Institute of Astronomy)
 \end{itemize}
 
 \section*{PRESENTATIONS}
 \begin{itemize}
     \item \textit{Estimating Neutron Star Tidal Deformability}, at the CITA Undergraduate Research Showcase \hfill 2023
 
+    \item PHY478 Physics Project final presentation \hfill 2023
+
     \item Two presentations given at the CITA Compact Objects Group, as part of PHY478 Physics Project \hfill 2023
 \end{itemize}
 
 \section*{SELECTED COURSES}
+At the University of Cambridge:
+\begin{itemize}
+    \item Gravitational Waves and Numerical Relativity \hfill Planned (Easter 2024)
+
+    \item Canonical Gravity Hamiltonian Approach to General Relativity \hfill Planned (Lent 2024)
+
+    \item Astrostatistics \hfill Planned (Lent 2024)
+
+    \item Cosmology \hfill In progress (Michaelmas 2024)
+
+    \item General Relativity \hfill In progress (Michaelmas 2024)
+\end{itemize}
+
+At the University of Toronto:
 \begin{itemize}
     \item General Relativity (APM426) \hfill A (Winter 2024)
     
@@ -141,8 +170,16 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
     \item Geometry of Curves and Surfaces (MAT363) \hfill A+ (Winter 2023)
 \end{itemize}
 
+
+\newpage
 \section*{RESEARCH INTERESTS}
 \begin{itemize}
+    \item Computational data analysis
+
+    \item Simulation programming
+
+    \item Machine learning, artificial intelligence
+    
     \item Gravitation
 
     \item Cosmology
@@ -150,15 +187,8 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
     \item Black holes, compact objects
 
     \item Dark matter, dark energy
-
-    \item Quantum mechanics
-
-    \item Computational data analysis
-
-    \item Simulation programming
-
-    \item Machine learning, artificial intelligence
 \end{itemize}
+
 
 % Experiences Section
 \section*{RELEVANT EXPERIENCE}
@@ -167,6 +197,7 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 
     \item Tutored high-school students in physics \& mathematics \hfill 2020 | 2022, 2024 | present
 \end{itemize}
+
 
 \section*{LANGUAGES}
 \begin{itemize}
@@ -186,9 +217,11 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
     \item Hong Kong SAR (HK)
 \end{itemize}
 
-\newpage
+
 \section*{VOLUNTEERING}
 \begin{itemize}
+    \item Involved in public astronomical observing nights and school outreach at the Institute of Astronomy
+
     \item Volunteered for RiseWise HK, serving as an assistant soccer coach for children with special educational needs
 
     \item Travelled to Chiang Mai, Thailand to physically contribute to the construction of a school
@@ -198,26 +231,22 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 
 \section*{MEMBERSHIPS}
 \begin{itemize}
-    \item University of Toronto Physics Student Union
+    \item Sidney Sussex College Football Team, Premier Division
 
-    \item University of Toronto Rock Climbing Club
+    \item Cambridge University Mountaineering Club
 
-    \item University of Toronto Hart House Chess Club
+    \item Cambridge University Table Tennis Club
 
-    \item University of Toronto Hong Kong Student Association
+    \item Cambridge University Hong Kong Postgraduate Student Association
 
-    \item University of Toronto Hide and Seek Club
-
-    \item Victoria College Intramural Soccer Team (11 vs 11)
-
-    \item Victoria College Intramural Soccer Team (6 vs 6)
+    \item Cambridge University Chinese Society
 \end{itemize}
 
 \section*{PERSONAL INTERESTS}
 \begin{itemize}
-    \item Rock climbing (both outdoors and indoors, with awards won at amateur, inter-high-school and inter-university competitions. Also led a rock climbing extra-curricular activity during high school, including captaining the school team at a competition)
+    \item Rock climbing (both outdoors and indoors, with awards won at amateur, inter-high-school and inter-university competitions. Also led a rock climbing extra-curricular activity during high school, including captaining the competition team)
 
-    \item Soccer (5+ years league participation)
+    \item Soccer (7+ years league participation)
 
     \item Scuba diving (PADI open water certified)
 
