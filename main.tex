@@ -7,7 +7,16 @@
 \geometry{letterpaper, margin=0.75in} % Set paper size and margins
 \usepackage{titlesec} % For section title formatting
 \usepackage{enumitem} % For itemized list formatting
+\usepackage{xcolor} % For colored text
 \usepackage{hyperref} % For hyperlinks
+\definecolor{linkblue}{rgb}{0.0, 0.0, 0.75}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=linkblue,
+    filecolor=linkblue,      
+    urlcolor=linkblue,
+    citecolor=linkblue,
+}
 \usepackage{tabularx}
 \usepackage{fancyhdr}
 \usepackage{datetime}
@@ -37,7 +46,7 @@
 \begin{flushleft}
 \textbf{\LARGE Kyle Wong}\\[0.5em] % Name
 Recent Master's graduate from Sidney Sussex College, University of Cambridge
-\\ Email: \href{mailto:kyleyhw@gmail.com}{kyleyhw@gmail.com} % Contact info
+\\ Email: \url{kyleyhw@gmail.com} % Contact info
 \\ GitHub: \url{https://github.com/kyleyhw}
 
 \vspace{1em}
