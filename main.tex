@@ -7,7 +7,16 @@
 \geometry{letterpaper, margin=0.75in} % Set paper size and margins
 \usepackage{titlesec} % For section title formatting
 \usepackage{enumitem} % For itemized list formatting
+\usepackage{xcolor} % For colored text
 \usepackage{hyperref} % For hyperlinks
+\definecolor{linkblue}{rgb}{0.0, 0.0, 0.75}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=linkblue,
+    filecolor=linkblue,      
+    urlcolor=linkblue,
+    citecolor=linkblue,
+}
 \usepackage{tabularx}
 \usepackage{fancyhdr}
 \usepackage{datetime}
@@ -36,19 +45,19 @@
 % Header
 \begin{flushleft}
 \textbf{\LARGE Kyle Wong}\\[0.5em] % Name
-Recent graduate from Sidney Sussex College, University of Cambridge
-\\ Email: \href{mailto:kyleyhw@gmail.com}{kyleyhw@gmail.com} % Contact info
+Recent Master's graduate from Sidney Sussex College, University of Cambridge
+\\ Email: \url{kyleyhw@gmail.com} % Contact info
 \\ GitHub: \url{https://github.com/kyleyhw}
 
 \vspace{1em}
-\textit{A highly motivated recent Master's graduate from the University of Cambridge with a strong background in Astrophysics, Mathematics, and computational science. Experienced in cosmological research, gravitational wave data analysis, and radio astronomy. Seeking a challenging research or data science role to apply expertise in Python, scientific computing, and data analysis.}
+\textit{A highly motivated recent Master's graduate from the University of Cambridge with a strong background in astrophysics, mathematics, and computational science. Experienced in cosmological research, gravitational wave data analysis, and radio astronomy. Seeking a challenging research or data science role to further develop expertise in scientific computing, data analysis, and software programming.}
 \end{flushleft}
 
 % Education Section
 \section*{EDUCATION}
 \textbf{Sidney Sussex College, University of Cambridge}, Cambridge, England, United Kingdom \hfill 2024 | 2025\\
 MASt/Part III in Astrophysics\\
-Graduated with equiv. Good Honors\\
+Graduated with Good Honours equivalent\\
 
 
 
@@ -64,13 +73,13 @@ International General Certificate of Secondary Education (IGCSE) in 12 subjects
 
 % Experience Section
 \section*{RESEARCH EXPERIENCE}
-\textbf{Master's of Advanced Study Research Project} \hfill Cambridge, England, United Kingdom\\
+\textbf{Master of Advanced Study Research Project} \hfill Cambridge, England, United Kingdom\\
 \textit{Postgraduate Student} \hfill October 2024 | September 2025\\
 Supervised by Prof. Anastasia Fialkov at the Institute of Astronomy, University of Cambridge
 \begin{itemize}
-    \item Research topic: implementation and statistical testing of variable initial conditions (cosmologies) and variable resolution in 21cmSPACE code package for simulating the distribution of hydrogen gas clouds from in the early universe, making possible efficient forecasting of future radio astronomy experiments, most notably for the Square Kilometre Array (SKA)
+    \item Research topic: implementation and statistical testing of variable initial conditions (cosmologies) in 21cmSPACE code package for simulating the distribution of hydrogen gas clouds in the early universe, making possible efficient forecasting of future radio astronomy experiments, most notably for the Square Kilometre Array (SKA)
     
-    \item Skills: simulation, MATLAB, high performance computing, data visualization, cosmology
+    \item Skills: simulation, high performance computing, data visualization, cosmology, Python, MATLAB
 \end{itemize}
 
 \textbf{Canadian Institute for Theoretical Astrophysics\\
@@ -80,7 +89,7 @@ Supervised by Dr. Philippe Landry at the Canadian Institute for Theoretical Astr
 \begin{itemize}
     \item Research topic: probing neutron star tidal deformability from gravitational wave signals using Markov chain Monte Carlo (MCMC) parameter estimation, and incorporating new models for neutron star equation of state correlations in the analysis pipeline of Laser Interferometer Gravitational-Wave Observatory (LIGO) Scientific Collaboration gravitational wave data
 
-    \item Skills: simulation, MCMC, Bayesian inference, high performance computing
+    \item Skills: simulation, MCMC, Bayesian inference, high performance computing, Python
 \end{itemize}
 
  
@@ -90,7 +99,7 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 \begin{itemize}
     \item Research topic: incorporating statistical priors into the power spectrum data estimator used in the data pipeline, for analysis of radio astronomy data from the Hydrogen Epoch of Reionization Array (HERA) collaboration's cosmic dawn experiment, using the Python programming language
 
-    \item Skills: simulation, Fourier transform, radio astronomy, radio frequency interference
+    \item Skills: simulation, Fourier transform, radio astronomy, radio frequency interference, Python
 \end{itemize}
 
 
@@ -112,16 +121,20 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 
     \item Birkenshaw Family Scholarship \hfill 1,000 CAD, 2022
 
-    \item Received offer for University of Toronto \\Natalia Krasnopolskaia Memorial Summer Undergraduate Research Fellowship \\(declined due to commitment with MSI SURA) \hfill 2022
+    % \item Received offer for University of Toronto \\Natalia Krasnopolskaia Memorial Summer Undergraduate Research Fellowship \\(declined due to commitment with MSI SURA) \hfill 2022
 \end{itemize}
 
 % Skills Section
 \section*{SKILLS}
 \begin{itemize}
     \item \textbf{Programming:} Proficient in Python for scientific computing and data analysis, with additional experience in MATLAB and Java.
-    \item \textbf{Data Analysis:} multi-dimensional data visualization, fast Fourier transform, numerical methods (differentiation, integration, root finding, ODE/PDE solutions), Monte-Carlo methods, and symbolic computing.
+    
+    \item \textbf{Data Analysis:} multi-dimensional data visualization, fast Fourier transform, numerical methods (differentiation, integration, root finding, ODE/PDE solutions), Monte Carlo methods, and symbolic computing.
+    
     \item \textbf{Software \& Libraries:} Bilby (gravitational wave parameter estimation), 21cmSPACE, CAMB, recfast++ (cosmological simulation).
-    \item \textbf{Machine Learning (ML):} Solid understanding of fundamental machine learning techniques, including the MCMC method and Convolutional Neural Network (CNN) architectures. Experience in implementing ML models from first principles.
+    \item \textbf{Machine Learning (ML):} Solid understanding of fundamental machine learning techniques, including the MCMC method and Convolutional Neural Network (CNN) architectures. 
+    % Experience in implementing ML models from first principles.
+    
     \item \textbf{AI Tools:} Google Gemini, Gemini CLI, and ChatGPT for academic and scientific research and coding.
 \end{itemize}
 
@@ -140,8 +153,7 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 
 \textbf{sound\_simulation} (\url{https://github.com/kyleyhw/sound_simulation})
 \begin{itemize}
-    \item A numerical simulation of physical waves in N-dimensions, implemented in Python. The simulation allows for the creation of physical boundaries and obstacles, and models their interaction with the waves.
-    \item Future work aims to use this simulation to generate training data for machine learning models.
+    \item A numerical simulation of physical waves in N-dimensions, implemented in Python. The simulation allows for the creation of physical boundaries and obstacles, and models their interaction with the waves. Future work aims to use this simulation to generate training data for machine learning models.
     \item Skills: Python, NumPy, Matplotlib, numerical modeling, physics simulation.
 \end{itemize}
 
@@ -150,18 +162,17 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 \textbf{digit\_recognizer} (\url{https://github.com/kyleyhw/digit_recognition})
 \begin{itemize}
     \item A project to build a convolutional neural network (CNN) from scratch in Python for handwritten digit recognition. This was undertaken to develop a fundamental understanding of machine learning principles without relying on high-level libraries like PyTorch or TensorFlow.
-    \item Skills: Python, NumPy, machine learning, neural networks, computer vision.
+    \item Skills: Python, NumPy, fundamental machine learning, neural networks and architecture, computer vision, Tkinter.
 \end{itemize}
 
 \vspace{0.5em}
 
 \textbf{digit\_recognizer\_pytorch} (\url{https://github.com/kyleyhw/digit_recognition_pytorch})
 \begin{itemize}
-   \item Developed a CNN from scratch using PyTorch for real-time MNIST digit recognition, featuring an interactive GUI with advanced preprocessing,
+   \item Developed a CNN using PyTorch for real-time MNIST digit recognition, featuring an interactive GUI with advanced preprocessing,
      comprehensive documentation, robust testing, and checkpointing, to deepen understanding of ML principles and software engineering best
      practices.
-   \item Skills: Python, PyTorch, NumPy, machine learning, neural networks, computer vision, GUI development (Tkinter), data visualization (Matplotlib),
-      Git, technical documentation.
+   \item Skills: Python, PyTorch, NumPy, machine learning, neural networks, computer vision, Tkinter.
 \end{itemize}
 
 \vspace{0.5em}
@@ -169,7 +180,7 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 \textbf{driver\_assignment} (\url{https://github.com/kyleyhw/driver_assignment})
 \begin{itemize}
     \item An optimization tool to solve the problem of assigning passengers to drivers for group trips. The tool uses an algorithm to find an optimal assignment based on driver and passenger constraints.
-    \item Skills: Python, optimization, algorithms, problem-solving.
+    \item Skills: Python, optimization, algorithms, problem-solving, data visualization.
 \end{itemize}
 
 \newpage
@@ -189,6 +200,7 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
     \item Computational Astrophysics (Toronto, 2023)
     \item Advanced Classical Mechanics (Toronto, 2023)
     \item Geometry of Curves and Surfaces (Toronto, 2023)
+    \item Partial Differential Equations (Toronto, 2023)
 \end{itemize}
 \end{multicols}
 
@@ -200,15 +212,15 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 
     \item Fundamental machine learning, artificial intelligence
     
-    \item Astrophysical phenomena (including gravitation, cosmology, black holes \& compact objects, dark matter, dark energy)
+    \item Astrophysics (including gravitation, cosmology, black holes \& compact objects, dark matter, dark energy)
 \end{itemize}
 
 
 % Experiences Section
 \section*{RELEVANT EXPERIENCE}
 \begin{itemize}
-    \item \textbf{Teaching:} Private Tutor for physics & mathematics (IGCSE, A-levels, IB syllabi). \hfill 2020 – 2022, 2024 – 2025
-    \item \textbf{Professional Development:} Attended a one-week intensive bootcamp on astrophysics at the University of Pennsylvania (HERA Collaboration). \hfill 2022
+    \item \textbf{Teaching:} Private Tutor for physics \& mathematics (IGCSE, A-levels, IB syllabi). \hfill 2020 – 2022, 2024 – 2025
+    \item \textbf{Professional Development:} Intensive astrophysics bootcamp at the University of Pennsylvania. \hfill 2022
     \item \textbf{Volunteering:}
     \begin{itemize}
         \item Involved in public astronomical observing nights at the Institute of Astronomy.
@@ -256,13 +268,13 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 
 \section*{PERSONAL INTERESTS}
 \begin{itemize}
-    \item Rock climbing (both outdoors and indoors, with awards won at amateur, inter-high-school and inter-university competitions. Also led a rock climbing extra-curricular activity during high school, including captaining the competition team)
+    \item Rock climbing (both outdoors and indoors, with awards won at amateur, inter-high school and inter-university competitions. Also led a rock climbing extra-curricular activity during high school, including captaining the competition team)
 
     \item Soccer (7+ years league participation)
 
     \item Scuba diving (PADI open water certified)
 
-    \item Traveling
+    \item Travelling
 \end{itemize}
 
 % \section*{OTHER CERTIFICATIONS}
