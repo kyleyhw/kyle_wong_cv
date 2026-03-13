@@ -22,6 +22,24 @@
 \usepackage{datetime}
 \usepackage{multicol}
 
+% Version Control
+\ifdefined\isacademic
+\else
+  \def\isacademic{0} % Default to industry (0) if not defined
+\fi
+
+\usepackage{etoolbox}
+\newbool{academic}
+\ifnum\isacademic=1
+  \setbool{academic}{true}
+\else
+  \setbool{academic}{false}
+\fi
+
+\newcommand{\academicversion}[1]{\ifbool{academic}{#1}{}}
+\newcommand{\industryversion}[1]{\ifbool{academic}{}{#1}}
+\newcommand{\versiontext}[2]{\ifbool{academic}{#1}{#2}}
+
 % Formatting
 \setlist{noitemsep} % Removes item separation
 \titleformat{\section}{\large\bfseries}{\thesection}{1em}{}[\titlerule] % Section title format
@@ -87,7 +105,7 @@ Supervised by Prof. Anastasia Fialkov at the Institute of Astronomy, University 
 \textit{Undergraduate Researcher} \hfill May 2023 | December 2023\\
 Supervised by Dr. Philippe Landry at the Canadian Institute for Theoretical Astrophysics
 \begin{itemize}
-    \item Research topic: probing neutron star tidal deformability from gravitational wave signals using Markov chain Monte Carlo (MCMC) parameter estimation in many dimensions, and incorporating new models for neutron star equation of state correlations in the analysis pipeline of Laser Interferometer Gravitational-Wave Observatory (LIGO) Scientific Collaboration gravitational wave data
+    \item Research topic: probing neutron star tidal deformability from gravitational wave signals using Markov chain Monte Carlo (MCMC) parameter estimation \versiontext{in many dimensions, }{ }and incorporating new models for neutron star equation of state correlations in the analysis pipeline of Laser Interferometer Gravitational-Wave Observatory (LIGO) Scientific Collaboration gravitational wave data
 
     \item Skills: simulation, MCMC, Bayesian inference, high performance computing, Python
 \end{itemize}
@@ -170,7 +188,8 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 \textbf{digit\_recognizer\_pytorch} (\url{https://github.com/kyleyhw/digit_recognition_pytorch})
 \begin{itemize}
    \item Developed a CNN using PyTorch for real-time MNIST digit recognition, featuring an interactive GUI with advanced preprocessing,
-     comprehensive documentation, robust testing, and checkpointing.
+     comprehensive documentation, robust testing, and checkpointing\industryversion{, to deepen understanding of ML principles and software engineering best
+     practices}.
    \item Skills: Python, PyTorch, NumPy, machine learning, neural networks, computer vision, Tkinter.
 \end{itemize}
 
@@ -178,7 +197,7 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 
 \textbf{driver\_assignment} (\url{https://github.com/kyleyhw/driver_assignment})
 \begin{itemize}
-    \item  An application of constraint programming to the vehicle routing problem, assigning passengers to drivers by minimizing a Haversine distance-based cost function. Developed to provide a scalable framework for real-world logistical challenges like ride-sharing coordination.
+    \item \versiontext{An application of constraint programming to the vehicle routing problem, assigning passengers to drivers by minimizing a Haversine distance-based cost function. Developed to provide a scalable framework for real-world logistical challenges like ride-sharing coordination.}{An optimization tool to solve the problem of assigning passengers to drivers for group trips. The tool uses an algorithm to find an optimal assignment based on driver and passenger constraints.}
     \item Skills: Python, optimization, algorithms, problem-solving, data visualization.
 \end{itemize}
 
