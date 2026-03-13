@@ -1,0 +1,43 @@
+name: Build and Deploy CVs
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'main.tex'
+      - 'references.bib'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build_cv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Industry CV
+        uses: dante-ev/latex-action@master
+        with:
+          root_file: main.tex
+          args: "-interaction=nonstopmode -jobname=industry \"\\def\\isacademic{0}\\input{main.tex}\""
+
+      - name: Build Academic CV
+        uses: dante-ev/latex-action@master
+        with:
+          root_file: main.tex
+          args: "-interaction=nonstopmode -jobname=academic \"\\def\\isacademic{1}\\input{main.tex}\""
+
+      - name: Rename and Organize PDFs
+        run: |
+          MONTH=$(date +%b | tr '[:upper:]' '[:lower:]')
+          YEAR=$(date +%Y)
+          mv industry.pdf kyle_wong_cv_${MONTH}_${YEAR}_industry.pdf
+          mv academic.pdf kyle_wong_cv_${MONTH}_${YEAR}_academic.pdf
+
+      - name: Commit and Push Updated PDFs
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto-generate Industry and Academic CVs (GitHub Actions)"
+          file_pattern: 'kyle_wong_cv_*.pdf'
+          branch: master
