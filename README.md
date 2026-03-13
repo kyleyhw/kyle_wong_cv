@@ -11,9 +11,8 @@ kyle_wong_cv/
 ├── kyle_wong_cv_*.pdf    # Compiled PDF outputs (tracked in Git)
 ├── PROJECT_PLAN.md       # Development roadmap
 ├── README.md             # This file
-├── docs/                 # Documentation folder
-│   └── index.md          # Documentation hub
-└── references.bib        # BibTeX bibliography (if applicable)
+├── docs/                 # Documentation hub
+└── references.bib        # BibTeX bibliography
 ```
 
 ## How to Build
@@ -36,3 +35,5 @@ The build process is automated via `build_cv.ps1`. You must specify a mandatory 
 This repository uses **LaTeX conditional compilation** (`etoolbox` package) to maintain both versions in a single `main.tex` file. This ensures that core information (Education, Skills, Contact Info) is always synchronized across all versions.
 
 The `master` branch is the primary branch for both development and Overleaf synchronization.
+
+The previous multi-branch strategy (e.g., `quant-cv-updates`) has been retired and consolidated into this single-source workflow to prevent version desynchronization.
