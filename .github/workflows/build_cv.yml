@@ -3,7 +3,7 @@ name: Build and Deploy CVs
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'main.tex'
       - 'references.bib'
@@ -40,4 +40,4 @@ jobs:
         with:
           commit_message: "Auto-generate Industry and Academic CVs (GitHub Actions)"
           file_pattern: 'kyle_wong_cv_*.pdf'
-          branch: master
+          branch: main
