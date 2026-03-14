@@ -173,16 +173,17 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 
 \textbf{mercury} [Private Repository]
 \begin{itemize}
-    \item \versiontext{Developed an event-driven engine for prediction markets, implementing a real-time data ingestion and execution pipeline with modular strategy support and robust error handling.}{A modular trading engine featuring automated risk management, real-time portfolio tracking, and optimized position sizing via the Kelly Criterion.}
-    \item Skills: Python, SQLModel, HTTPX, data engineering, risk management, Docker.
+    \item \versiontext{Engineered a modular, platform-agnostic trading system for weather-derivative prediction markets (e.g., Polymarket) using an asynchronous event-bus architecture in Python. Implemented a watcher-based service for real-time polling of weather providers and high-frequency market state through WebSockets and local orderbook monitoring.}{Developed an event-driven engine for capturing alpha in weather-derivative prediction markets. Features a provider-agnostic collection layer, asynchronous watcher architecture for real-time signal generation, and automated execution with velocity rotation, local orderbook tracking, and risk-aware position sizing via the Kelly Criterion.}
+    \item \industryversion{Architected a multi-repository ecosystem with specialized submodules for data ingestion, core logic, and strategy execution, ensuring scalable infrastructure with integrated risk management and automated safety controls.}
+    \item Skills: Python, Asyncio, WebSockets, Parquet, SQLModel, Risk Management, Docker.
 \end{itemize}
 
 \vspace{0.5em}
 
 \textbf{quant\_core} (\url{https://github.com/kyleyhw/quant_core})
 \begin{itemize}
-    \item \versiontext{Architected a market-agnostic algorithmic trading framework using the Adapter pattern to decouple core logic from broker APIs, incorporating statistical learning and machine learning models.}{An "Open Core" algorithmic trading platform with a scalable architecture, providing a unified foundation for backtesting and live execution with Interactive Brokers (IBKR).}
-    \item Skills: Python, Pandas, NumPy, Scikit-learn, XGBoost, Interactive Brokers API.
+    \item \versiontext{Architected a market-agnostic algorithmic trading framework using a Market Adapter pattern to decouple core logic from broker-specific APIs. Implemented a quantitative pipeline for time-series forecasting and regime detection using Hidden Markov Models (HMM) and XGBoost.}{Developed an "Open Core" algorithmic trading platform with a flexible, modular architecture for strategy development and automated execution via Interactive Brokers (IBKR). Features a comprehensive backtesting engine with high-efficiency data caching and integrated risk management.}
+    \item Skills: Python, Pandas, Scikit-learn, XGBoost, Hidden Markov Models, Interactive Brokers API, Backtesting.
 \end{itemize}
 
 \vspace{0.5em}
