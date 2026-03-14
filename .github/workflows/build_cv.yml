@@ -11,6 +11,9 @@ on:
       - 'references.bib'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build_cv:
     runs-on: ubuntu-latest
