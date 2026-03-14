@@ -6,8 +6,10 @@ on:
       - main
     paths:
       - 'main.tex'
+      - 'industry.tex'
+      - 'academic.tex'
       - 'references.bib'
-  workflow_dispatch: # Allows manual triggering
+  workflow_dispatch:
 
 jobs:
   build_cv:
@@ -17,16 +19,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Industry CV
-        uses: dante-ev/latex-action@master
+        uses: xu-cheng/latex-action@v3
         with:
-          root_file: main.tex
-          args: "-interaction=nonstopmode -jobname=industry \"\\def\\isacademic{0}\\input{main.tex}\""
+          root_file: industry.tex
 
       - name: Build Academic CV
-        uses: dante-ev/latex-action@master
+        uses: xu-cheng/latex-action@v3
         with:
-          root_file: main.tex
-          args: "-interaction=nonstopmode -jobname=academic \"\\def\\isacademic{1}\\input{main.tex}\""
+          root_file: academic.tex
 
       - name: Rename and Organize PDFs
         run: |
