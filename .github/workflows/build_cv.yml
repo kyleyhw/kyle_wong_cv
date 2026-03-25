@@ -39,8 +39,10 @@ jobs:
           mv academic.pdf kyle_wong_cv_${MONTH}_${YEAR}_academic.pdf
 
       - name: Commit and Push Updated PDFs
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Auto-generate Industry and Academic CVs (GitHub Actions)"
-          file_pattern: 'kyle_wong_cv_*.pdf'
-          branch: main
+        run: |
+          git diff --quiet kyle_wong_cv_*.pdf && echo "PDFs unchanged, skipping commit" && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add kyle_wong_cv_*.pdf
+          git commit -m "Auto-generate Industry and Academic CVs (GitHub Actions)"
+          git push
