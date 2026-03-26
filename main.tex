@@ -44,7 +44,7 @@
 % Formatting
 \setlist{noitemsep} % Removes item separation
 \titleformat{\section}{\large\bfseries}{\thesection}{1em}{}[\titlerule] % Section title format
-\titlespacing*{\section}{0pt}{\baselineskip}{\baselineskip} % Section title spacing
+\titlespacing*{\section}{0pt}{0.5em}{0.5em} % Section title spacing
 \setlength{\parindent}{0pt} % Removes indent
 \newdateformat{monthyeardate}{% Date formatting for header
   \monthname[\THEMONTH] \THEYEAR}
@@ -256,6 +256,15 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 \end{itemize}
 }
 
+\newcommand{\sectionCitizenships}{
+\section*{CITIZENSHIPS}
+\begin{itemize}
+    \item Hong Kong SAR (HKSAR)
+
+    \item United States of America (USA)
+\end{itemize}
+}
+
 % Begin document
 \begin{document}
 
@@ -298,6 +307,7 @@ Recent Master's graduate from Sidney Sussex College, University of Cambridge
 \sectionRepos
 \newpage
 \sectionHonours
+\sectionCourses
 \sectionSkills
 \sectionLanguages
 \sectionMemberships
