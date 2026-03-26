@@ -15,7 +15,7 @@
 \hypersetup{
     colorlinks=true,
     linkcolor=linkblue,
-    filecolor=linkblue,      
+    filecolor=linkblue,
     urlcolor=linkblue,
     citecolor=linkblue,
 }
@@ -50,6 +50,212 @@
   \monthname[\THEMONTH] \THEYEAR}
 %%%%%%%%%%
 
+% Section Definitions
+\newcommand{\sectionEducation}{
+\section*{EDUCATION}
+\textbf{Sidney Sussex College, University of Cambridge}, Cambridge, England, United Kingdom \hfill 2024 -- 2025\\
+MASt/Part III in Astrophysics\\
+Graduated with Good Honours equivalent\\
+
+
+\textbf{Victoria College, University of Toronto}, Toronto, Ontario, Canada \hfill 2020 -- 2024\\
+Honours Bachelor of Science (HBSc) in Physics \& Mathematics\\
+Graduated with High Distinction\\
+
+
+\textbf{German Swiss International School}, Hong Kong SAR, China \hfill 2010 -- 2020\\
+International Baccalaureate (IB) Diploma in 6 subjects\\
+International Advanced Subsidiary (AS) level in 1 subject\\
+International General Certificate of Secondary Education (IGCSE) in 12 subjects
+}
+
+\newcommand{\sectionResearch}{
+\section*{RESEARCH EXPERIENCE}
+\textbf{Master of Advanced Study Research Project} \hfill Cambridge, England, United Kingdom\\
+\textit{Postgraduate Student} \hfill October 2024 -- September 2025\\
+Supervised by Prof. Anastasia Fialkov at the Institute of Astronomy, University of Cambridge
+\begin{itemize}
+    \item Research topic: implementation and statistical testing of variable initial conditions (cosmologies) in 21cmSPACE code package for simulating the distribution of hydrogen gas clouds in the early universe, making possible efficient forecasting of future radio astronomy experiments, most notably for the Square Kilometre Array (SKA)
+\end{itemize}
+
+\textbf{Canadian Institute for Theoretical Astrophysics\\
+    Summer Undergraduate Research Fellowship} \hfill Toronto, Ontario, Canada\\
+\textit{Undergraduate Researcher} \hfill May 2023 -- December 2023\\
+Supervised by Dr. Philippe Landry at the Canadian Institute for Theoretical Astrophysics
+\begin{itemize}
+    \item Research topic: probing neutron star tidal deformability from gravitational wave signals using Markov chain Monte Carlo (MCMC) parameter estimation \academicversion{in many dimensions, }\industryversion{ }and incorporating new models for neutron star equation of state correlations in the analysis pipeline of Laser Interferometer Gravitational-Wave Observatory (LIGO) Scientific Collaboration gravitational wave data
+\end{itemize}
+
+
+\textbf{McGill Space Institute Summer Undergraduate Research Award} \hfill Montreal, Quebec, Canada\\
+\textit{Undergraduate Researcher} \hfill May 2022 -- April 2023\\
+
+Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill Space Institute) of McGill University
+\begin{itemize}
+    \item Research topic: incorporating statistical priors into the power spectrum data estimator used in the data pipeline, for analysis of radio astronomy data from the Hydrogen Epoch of Reionization Array (HERA) collaboration's cosmic dawn experiment, using the Python programming language
+\end{itemize}
+}
+
+\newcommand{\sectionHonours}{
+\section*{HONOURS, AWARDS AND SCHOLARSHIPS}
+\begin{itemize}
+    \item Dean's List Scholar in the Faculty of Arts \& Science \hfill 2022, 2023, 2024
+
+    \item Canadian Institute for Theoretical Astrophysics \\
+    Summer Undergraduate Research Fellowship (CITA SURF) \hfill 9,500 CAD, 2023
+
+    \item Birkenshaw Family Scholarship II \hfill 1,000 CAD, 2023
+
+    \item McGill Space Institute (now Trottier Space Institute) \\Summer Undergraduate Research Award (MSI SURA) \hfill 7,000 CAD, 2022
+
+    \item David and Louise Fraser Scholarship \hfill 2,500 CAD, 2022
+
+    \item University of Toronto Scholar \hfill 1,500 CAD, 2022
+
+    \item Birkenshaw Family Scholarship \hfill 1,000 CAD, 2022
+
+    % \item Received offer for University of Toronto \\Natalia Krasnopolskaia Memorial Summer Undergraduate Research Fellowship \\(declined due to commitment with MSI SURA) \hfill 2022
+\end{itemize}
+}
+
+\newcommand{\sectionSkills}{
+\section*{SKILLS}
+\begin{itemize}
+    \item \textbf{Technical:} Scientific computing, machine learning, statistical inference, simulation, time-series analysis, data visualization, high-performance computing.
+
+    \industryversion{\item \textbf{Financial Experience:} Manual trading in prediction markets (Polymarket) and stocks.}
+
+    \item \textbf{AI Tools:} Claude Code, Google Gemini, Gemini CLI, ChatGPT, and Google Antigravity for automated software engineering, academic and scientific research, and coding.
+\end{itemize}
+}
+
+\newcommand{\sectionPresentations}{
+\section*{PRESENTATIONS}
+\begin{itemize}
+    \item Interim progress presentation, at the Cambridge Cosmic Dawn Group \hfill 2024
+
+    \item \textit{Estimating Neutron Star Tidal Deformability}, at the CITA Undergraduate Research Showcase \hfill 2023
+
+    \item PHY478 Physics Project final presentation \hfill 2023
+
+    \item Two presentations given at the CITA Compact Objects Group, as part of PHY478 Physics Project \hfill 2023
+\end{itemize}
+}
+
+\newcommand{\sectionRepos}{
+\section*{FEATURED PERSONAL GIT REPOSITORIES}
+
+\textbf{mercury\_strategies} [Private Repository]
+\begin{itemize}
+    \item \academicversion{Engineered a platform-agnostic trading system for weather-derivative prediction markets (e.g., Polymarket) using an asynchronous event-bus architecture in Python. Implemented a watcher-based service for real-time polling of weather providers and high-frequency market state through WebSockets and local orderbook monitoring; deployed dockerized on AWS for 24/7 automated operation.}\industryversion{Developed an event-driven engine for capturing alpha in weather-derivative prediction markets (Polymarket), managing a dockerized infrastructure on AWS with integrated risk management. Features a provider-agnostic collection and analysis layer, asynchronous watcher architecture for real-time signal generation, and automated execution with velocity rotation, local orderbook tracking, and risk-aware position sizing via the Kelly Criterion.}
+\end{itemize}
+
+\vspace{0.5em}
+
+\textbf{quant\_core} (\url{https://github.com/kyleyhw/quant_core})
+\begin{itemize}
+    \item \academicversion{Architected a market-agnostic algorithmic trading framework using a Market Adapter pattern to decouple core logic from broker-specific APIs. Implemented a quantitative pipeline for time-series forecasting and regime detection using Hidden Markov Models (HMM) and XGBoost.}\industryversion{Developed an "Open Core" algorithmic trading platform with a flexible, modular architecture for strategy development and automated execution via Interactive Brokers (IBKR). Features a comprehensive backtesting engine with high-efficiency data caching and integrated risk management.}
+\end{itemize}
+
+\vspace{0.5em}
+
+\textbf{sound\_simulation} (\url{https://github.com/kyleyhw/sound_simulation})
+\begin{itemize}
+    \item A numerical simulation of physical waves in N-dimensions, implemented in Python. The simulation allows for the creation of physical boundaries and obstacles, and models their interaction with the waves. Future work aims to use this simulation to generate training data for machine learning models.
+\end{itemize}
+}
+
+\newcommand{\sectionCourses}{
+\section*{SELECTED COURSES}
+\begin{multicols}{2}
+\begin{itemize}
+    \item Gravitational Waves \& Numerical Relativity \\(Cambridge, 2025)
+    \item Astrostatistics (Cambridge, 2025)
+    \item Cosmology (Cambridge, 2024)
+    \item General Relativity (Cambridge, 2024)
+    \item General Relativity (Toronto, 2024)
+    \item Relativity Theory II (Toronto, 2024)
+    \item Relativity Theory I (Toronto, 2023)
+    \item Physics Project (Toronto, 2023)
+    \item Computational Physics (Toronto, 2023)
+    \item Computational Astrophysics (Toronto, 2023)
+    \item Advanced Classical Mechanics (Toronto, 2023)
+    \item Geometry of Curves and Surfaces (Toronto, 2023)
+    \item Partial Differential Equations (Toronto, 2023)
+\end{itemize}
+\end{multicols}
+}
+
+\newcommand{\sectionResearchInterests}{
+\section*{RESEARCH INTERESTS}
+\begin{itemize}
+    \item Computational data analysis
+
+    \item Simulation and numerical methods
+
+    \item Machine learning, artificial intelligence
+
+    \item Astrophysics (including gravitation, cosmology, black holes \& compact objects, dark matter, dark energy)
+\end{itemize}
+}
+
+\newcommand{\sectionRelevantExperience}{
+\section*{RELEVANT EXPERIENCE}
+\begin{itemize}
+    \item \textbf{Teaching:} Private Tutor for physics \& mathematics (IGCSE, A-levels, IB syllabi). \hfill 2020 – 2022, 2024 – 2025
+    \item \textbf{Professional Development:} Intensive astrophysics bootcamp at the University of Pennsylvania. \hfill 2022
+    \item \textbf{Volunteering:}
+    \begin{itemize}
+        \item Involved in public astronomical observing nights at the Institute of Astronomy.
+        \item Involved in Beaver Scouts outreach visits at the Institute of Astronomy.
+        \item Volunteered for RiseWise HK, serving as an assistant soccer coach for children with special educational needs.
+        \item Travelled to Chiang Mai, Thailand to physically contribute to the construction of a school.
+        \item Undertook training and assisted with a public astronomical observing night at McGill University.
+    \end{itemize}
+\end{itemize}
+}
+
+\newcommand{\sectionLanguages}{
+\section*{LANGUAGES}
+\begin{itemize}
+    \item English (fluent, language of education)
+
+    \item Cantonese (fluent, mother tongue)
+
+    \item Mandarin (formally learned 10 years)
+
+    \item German (formally learned 10 years)
+\end{itemize}
+}
+
+\newcommand{\sectionMemberships}{
+\section*{RECENT MEMBERSHIPS}
+\begin{itemize}
+    \item Sidney Sussex College Football Team, Premier Division
+
+    \item Cambridge University Mountaineering Club
+
+    \item Cambridge University Table Tennis Club
+
+    \item Cambridge University Hong Kong Postgraduate Student Association
+
+    \item Cambridge University Chinese Society
+\end{itemize}
+}
+
+\newcommand{\sectionPersonalInterests}{
+\section*{PERSONAL INTERESTS}
+\begin{itemize}
+    \item Rock climbing (both outdoors and indoors, with awards won at amateur, inter-high school and inter-university competitions. Also led a rock climbing extra-curricular activity during high school, including captaining the competition team)
+
+    \item Soccer (7+ years league participation)
+
+    \item Scuba diving (PADI open water certified)
+
+    \item Travelling
+\end{itemize}
+}
+
 % Begin document
 \begin{document}
 
@@ -72,173 +278,29 @@ Recent Master's graduate from Sidney Sussex College, University of Cambridge
 \textit{A highly motivated recent Master's graduate from the University of Cambridge with a strong background in astrophysics, mathematics, and computational science. Experienced in cosmological research, gravitational wave data analysis, and radio astronomy. Seeking a challenging research or data science role to further develop expertise in scientific computing and data analysis.}
 \end{flushleft}
 
-% Education Section
-\section*{EDUCATION}
-\textbf{Sidney Sussex College, University of Cambridge}, Cambridge, England, United Kingdom \hfill 2024 -- 2025\\
-MASt/Part III in Astrophysics\\
-Graduated with Good Honours equivalent\\
-
-
-
-\textbf{Victoria College, University of Toronto}, Toronto, Ontario, Canada \hfill 2020 -- 2024\\ % University name and location
-Honours Bachelor of Science (HBSc) in Physics \& Mathematics\\
-Graduated with High Distinction\\
-
-
-\textbf{German Swiss International School}, Hong Kong SAR, China \hfill 2010 -- 2020\\ % University name and location
-International Baccalaureate (IB) Diploma in 6 subjects\\
-International Advanced Subsidiary (AS) level in 1 subject\\
-International General Certificate of Secondary Education (IGCSE) in 12 subjects
-
-% Experience Section
-\section*{RESEARCH EXPERIENCE}
-\textbf{Master of Advanced Study Research Project} \hfill Cambridge, England, United Kingdom\\
-\textit{Postgraduate Student} \hfill October 2024 -- September 2025\\
-Supervised by Prof. Anastasia Fialkov at the Institute of Astronomy, University of Cambridge
-\begin{itemize}
-    \item Research topic: implementation and statistical testing of variable initial conditions (cosmologies) in 21cmSPACE code package for simulating the distribution of hydrogen gas clouds in the early universe, making possible efficient forecasting of future radio astronomy experiments, most notably for the Square Kilometre Array (SKA)
-\end{itemize}
-
-\textbf{Canadian Institute for Theoretical Astrophysics\\
-    Summer Undergraduate Research Fellowship} \hfill Toronto, Ontario, Canada\\
-\textit{Undergraduate Researcher} \hfill May 2023 -- December 2023\\
-Supervised by Dr. Philippe Landry at the Canadian Institute for Theoretical Astrophysics
-\begin{itemize}
-    \item Research topic: probing neutron star tidal deformability from gravitational wave signals using Markov chain Monte Carlo (MCMC) parameter estimation \academicversion{in many dimensions, }\industryversion{ }and incorporating new models for neutron star equation of state correlations in the analysis pipeline of Laser Interferometer Gravitational-Wave Observatory (LIGO) Scientific Collaboration gravitational wave data
-\end{itemize}
-
- 
-\textbf{McGill Space Institute Summer Undergraduate Research Award} \hfill Montreal, Quebec, Canada\\
-\textit{Undergraduate Researcher} \hfill May 2022 -- April 2023\\
-
-Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill Space Institute) of McGill University
-\begin{itemize}
-    \item Research topic: incorporating statistical priors into the power spectrum data estimator used in the data pipeline, for analysis of radio astronomy data from the Hydrogen Epoch of Reionization Array (HERA) collaboration's cosmic dawn experiment, using the Python programming language
-\end{itemize}
-
-
+% Section ordering
+\sectionEducation
+\sectionResearch
+\ifbool{academic}{
 \newpage
-\section*{HONOURS, AWARDS AND SCHOLARSHIPS}
-\begin{itemize}
-    \item Dean's List Scholar in the Faculty of Arts \& Science \hfill 2022, 2023, 2024
-
-    \item Canadian Institute for Theoretical Astrophysics \\
-    Summer Undergraduate Research Fellowship (CITA SURF) \hfill 9,500 CAD, 2023
-    
-    \item Birkenshaw Family Scholarship II \hfill 1,000 CAD, 2023
-
-    \item McGill Space Institute (now Trottier Space Institute) \\Summer Undergraduate Research Award (MSI SURA) \hfill 7,000 CAD, 2022
-
-    \item David and Louise Fraser Scholarship \hfill 2,500 CAD, 2022
-
-    \item University of Toronto Scholar \hfill 1,500 CAD, 2022
-
-    \item Birkenshaw Family Scholarship \hfill 1,000 CAD, 2022
-
-    % \item Received offer for University of Toronto \\Natalia Krasnopolskaia Memorial Summer Undergraduate Research Fellowship \\(declined due to commitment with MSI SURA) \hfill 2022
-\end{itemize}
-
-% Skills Section
-\section*{SKILLS}
-\begin{itemize}
-    \item \textbf{Technical:} Scientific computing, machine learning, statistical inference, simulation, time-series analysis, data visualization, high-performance computing.
-
-    \industryversion{\item \textbf{Financial Experience:} Manual trading in prediction markets (Polymarket) and stocks.}
-
-    \item \textbf{AI Tools:} Claude Code, Google Gemini, Gemini CLI, ChatGPT, and Google Antigravity for automated software engineering, academic and scientific research, and coding.
-\end{itemize}
-
-\section*{PRESENTATIONS}
-\begin{itemize}
-    \item Interim progress presentation, at the Cambridge Cosmic Dawn Group \hfill 2024
-
-    \item \textit{Estimating Neutron Star Tidal Deformability}, at the CITA Undergraduate Research Showcase \hfill 2023
-
-    \item PHY478 Physics Project final presentation \hfill 2023
-
-    \item Two presentations given at the CITA Compact Objects Group, as part of PHY478 Physics Project \hfill 2023
-\end{itemize}
-
-\section*{FEATURED PERSONAL GIT REPOSITORIES}
-
-\textbf{mercury\_strategies} [Private Repository]
-\begin{itemize}
-    \item \academicversion{Engineered a platform-agnostic trading system for weather-derivative prediction markets (e.g., Polymarket) using an asynchronous event-bus architecture in Python. Implemented a watcher-based service for real-time polling of weather providers and high-frequency market state through WebSockets and local orderbook monitoring; deployed dockerized on AWS for 24/7 automated operation.}\industryversion{Developed an event-driven engine for capturing alpha in weather-derivative prediction markets (Polymarket), managing a dockerized infrastructure on AWS with integrated risk management. Features a provider-agnostic collection and analysis layer, asynchronous watcher architecture for real-time signal generation, and automated execution with velocity rotation, local orderbook tracking, and risk-aware position sizing via the Kelly Criterion.}
-\end{itemize}
-
-\vspace{0.5em}
-
-\textbf{quant\_core} (\url{https://github.com/kyleyhw/quant_core})
-\begin{itemize}
-    \item \academicversion{Architected a market-agnostic algorithmic trading framework using a Market Adapter pattern to decouple core logic from broker-specific APIs. Implemented a quantitative pipeline for time-series forecasting and regime detection using Hidden Markov Models (HMM) and XGBoost.}\industryversion{Developed an "Open Core" algorithmic trading platform with a flexible, modular architecture for strategy development and automated execution via Interactive Brokers (IBKR). Features a comprehensive backtesting engine with high-efficiency data caching and integrated risk management.}
-\end{itemize}
-
-\vspace{0.5em}
-
-\textbf{sound\_simulation} (\url{https://github.com/kyleyhw/sound_simulation})
-\begin{itemize}
-    \item A numerical simulation of physical waves in N-dimensions, implemented in Python. The simulation allows for the creation of physical boundaries and obstacles, and models their interaction with the waves. Future work aims to use this simulation to generate training data for machine learning models.
-\end{itemize}
-
+\sectionHonours
+\sectionSkills
+\sectionPresentations
+\sectionRepos
 \newpage
-
-\section*{SELECTED COURSES}
-\begin{multicols}{2}
-\begin{itemize}
-    \item Gravitational Waves \& Numerical Relativity \\(Cambridge, 2025)
-    \item Astrostatistics (Cambridge, 2025)
-    \item Cosmology (Cambridge, 2024)
-    \item General Relativity (Cambridge, 2024)
-    \item General Relativity (Toronto, 2024)
-    \item Relativity Theory II (Toronto, 2024)
-    \item Relativity Theory I (Toronto, 2023)
-    \item Physics Project (Toronto, 2023)
-    \item Computational Physics (Toronto, 2023)
-    \item Computational Astrophysics (Toronto, 2023)
-    \item Advanced Classical Mechanics (Toronto, 2023)
-    \item Geometry of Curves and Surfaces (Toronto, 2023)
-    \item Partial Differential Equations (Toronto, 2023)
-\end{itemize}
-\end{multicols}
-
-\section*{RESEARCH INTERESTS}
-\begin{itemize}
-    \item Computational data analysis
-
-    \item Simulation and numerical methods
-
-    \item Machine learning, artificial intelligence
-    
-    \item Astrophysics (including gravitation, cosmology, black holes \& compact objects, dark matter, dark energy)
-\end{itemize}
-
-
-% Experiences Section
-\section*{RELEVANT EXPERIENCE}
-\begin{itemize}
-    \item \textbf{Teaching:} Private Tutor for physics \& mathematics (IGCSE, A-levels, IB syllabi). \hfill 2020 – 2022, 2024 – 2025
-    \item \textbf{Professional Development:} Intensive astrophysics bootcamp at the University of Pennsylvania. \hfill 2022
-    \item \textbf{Volunteering:}
-    \begin{itemize}
-        \item Involved in public astronomical observing nights at the Institute of Astronomy.
-        \item Involved in Beaver Scouts outreach visits at the Institute of Astronomy.
-        \item Volunteered for RiseWise HK, serving as an assistant soccer coach for children with special educational needs.
-        \item Travelled to Chiang Mai, Thailand to physically contribute to the construction of a school.
-        \item Undertook training and assisted with a public astronomical observing night at McGill University.
-    \end{itemize}
-\end{itemize}
-
-
-\section*{LANGUAGES}
-\begin{itemize}
-    \item English (fluent, language of education)
-
-    \item Cantonese (fluent, mother tongue)
-
-    \item Mandarin (formally learned 10 years)
-
-    \item German (formally learned 10 years)
-\end{itemize}
+\sectionCourses
+\sectionResearchInterests
+\sectionRelevantExperience
+\sectionLanguages
+}{
+\sectionRepos
+\newpage
+\sectionHonours
+\sectionSkills
+\sectionLanguages
+\sectionMemberships
+\sectionPersonalInterests
+}
 
 % \section*{CITIZENSHIPS}
 % \begin{itemize}
@@ -247,32 +309,8 @@ Supervised by Prof. Adrian Liu at the Trottier Space Institute (formerly McGill 
 %     \item Hong Kong SAR (HK)
 % \end{itemize}
 
-
-
-
-\section*{RECENT MEMBERSHIPS}
-\begin{itemize}
-    \item Sidney Sussex College Football Team, Premier Division
-
-    \item Cambridge University Mountaineering Club
-
-    \item Cambridge University Table Tennis Club
-
-    \item Cambridge University Hong Kong Postgraduate Student Association
-
-    \item Cambridge University Chinese Society
-\end{itemize}
-
-\section*{PERSONAL INTERESTS}
-\begin{itemize}
-    \item Rock climbing (both outdoors and indoors, with awards won at amateur, inter-high school and inter-university competitions. Also led a rock climbing extra-curricular activity during high school, including captaining the competition team)
-
-    \item Soccer (7+ years league participation)
-
-    \item Scuba diving (PADI open water certified)
-
-    \item Travelling
-\end{itemize}
+\sectionMemberships
+\sectionPersonalInterests
 
 % \section*{OTHER CERTIFICATIONS}
 % \begin{itemize}
