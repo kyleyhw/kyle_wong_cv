@@ -1,4 +1,4 @@
-name: Build and Deploy CVs
+name: Build CVs
 
 on:
   push:
@@ -10,9 +10,6 @@ on:
       - 'academic.tex'
       - 'references.bib'
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 jobs:
   build_cv:
@@ -30,19 +27,3 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: academic.tex
-
-      - name: Rename and Organize PDFs
-        run: |
-          MONTH=$(date +%b | tr '[:upper:]' '[:lower:]')
-          YEAR=$(date +%Y)
-          mv industry.pdf kyle_wong_cv_${MONTH}_${YEAR}_industry.pdf
-          mv academic.pdf kyle_wong_cv_${MONTH}_${YEAR}_academic.pdf
-
-      - name: Commit and Push Updated PDFs
-        run: |
-          git diff --quiet kyle_wong_cv_*.pdf && echo "PDFs unchanged, skipping commit" && exit 0
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add kyle_wong_cv_*.pdf
-          git commit -m "Auto-generate Industry and Academic CVs (GitHub Actions)"
-          git push
