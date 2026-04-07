@@ -1,4 +1,4 @@
-name: Build CVs
+name: Build and Commit CVs
 
 on:
   push:
@@ -11,12 +11,33 @@ on:
       - 'references.bib'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
+concurrency:
+  group: build-cv-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build_cv:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set reproducible build timestamps
+        run: |
+          # SOURCE_DATE_EPOCH makes pdflatex emit deterministic CreationDate, ModDate,
+          # and PDF /ID, so identical source produces byte-identical PDFs.
+          # FORCE_SOURCE_DATE=1 ensures pdflatex respects it for all embedded timestamps.
+          # Anchor to the latest commit that touched LaTeX source so reruns and
+          # workflow_dispatch reproduce the same PDFs even after auto-commits land.
+          SDE=$(git log -1 --pretty=%ct -- main.tex industry.tex academic.tex references.bib)
+          echo "SOURCE_DATE_EPOCH=$SDE" >> "$GITHUB_ENV"
+          echo "FORCE_SOURCE_DATE=1" >> "$GITHUB_ENV"
 
       - name: Build Industry CV
         uses: xu-cheng/latex-action@v3
@@ -27,3 +48,35 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: academic.tex
+
+      - name: Rename PDFs and clean stale month versions
+        run: |
+          MONTH=$(date +%b | tr '[:upper:]' '[:lower:]')
+          YEAR=$(date +%Y)
+          INDUSTRY_NAME="kyle_wong_cv_${MONTH}_${YEAR}_industry.pdf"
+          ACADEMIC_NAME="kyle_wong_cv_${MONTH}_${YEAR}_academic.pdf"
+
+          # Drop any committed PDFs from earlier months/years
+          find . -maxdepth 1 -type f -name 'kyle_wong_cv_*_industry.pdf' \
+            ! -name "$INDUSTRY_NAME" -print -delete
+          find . -maxdepth 1 -type f -name 'kyle_wong_cv_*_academic.pdf' \
+            ! -name "$ACADEMIC_NAME" -print -delete
+
+          mv industry.pdf "$INDUSTRY_NAME"
+          mv academic.pdf "$ACADEMIC_NAME"
+
+      - name: Commit and push if PDFs changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Stage adds/modifications/deletions of CV PDFs only
+          git add -A -- 'kyle_wong_cv_*.pdf'
+
+          if git diff --staged --quiet; then
+            echo "PDFs already up to date; nothing to commit."
+            exit 0
+          fi
+
+          git commit -m "Auto-generate CVs for ${GITHUB_SHA::7}"
+          git push origin HEAD:main
