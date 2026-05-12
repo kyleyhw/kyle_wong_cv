@@ -24,23 +24,6 @@
 \usepackage{datetime}
 \usepackage{multicol}
 
-% Version Control
-\ifdefined\isacademic
-\else
-  \def\isacademic{0} % Default to industry (0) if not defined
-\fi
-
-\usepackage{etoolbox}
-\newbool{academic}
-\ifnum\isacademic=1
-  \setbool{academic}{true}
-\else
-  \setbool{academic}{false}
-\fi
-
-\newcommand{\academicversion}[1]{\ifbool{academic}{#1}{}}
-\newcommand{\industryversion}[1]{\ifbool{academic}{}{#1}}
-
 % Formatting
 \setlist{noitemsep} % Removes item separation
 \titleformat{\section}{\large\bfseries}{\thesection}{1em}{}[\titlerule] % Section title format
@@ -84,36 +67,11 @@ Recent Master's graduate from Sidney Sussex College, University of Cambridge
 \\ GitHub: \url{https://github.com/kyleyhw}
 \\ Website: \url{https://kyleyhw.github.io/personal_website/}
 
-\academicversion{\vspace{1em}
-\textit{A highly motivated recent Master's graduate from the University of Cambridge with a strong background in astrophysics, mathematics, and computational science. Experienced in cosmological research, gravitational wave data analysis, and radio astronomy. Seeking a challenging research or data science role to further develop expertise in scientific computing and data analysis.}}
+\input{sections/header_summary.tex}
 \end{flushleft}
 
-% Section ordering
-\sectionEducation
-\sectionResearch
-\ifbool{academic}{
-\newpage
-\sectionHonours
-\sectionSkills
-\sectionPresentations
-\sectionRepos
-\newpage
-\sectionCourses
-\sectionResearchInterests
-\sectionRelevantExperience
-\sectionLanguages
-\sectionMemberships
-\sectionPersonalInterests
-}{
-\sectionRepos
-\newpage
-\sectionHonours
-\sectionCourses
-\sectionSkills
-\sectionLanguages
-\sectionMemberships
-\sectionPersonalInterests
-}
+% Section ordering (variant-specific; defined per-branch in sections/section_order.tex)
+\input{sections/section_order.tex}
 
 % \section*{CITIZENSHIPS}
 % \begin{itemize}

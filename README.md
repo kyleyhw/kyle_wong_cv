@@ -1,38 +1,41 @@
 # Kyle Wong CV
 
-A professional Curriculum Vitae authored in LaTeX with dual-version output (Industry and Academic) from a single modular source. Shared content is written once; version-specific content is marked with `\academicversion{...}` and `\industryversion{...}` toggle macros and compiled into the appropriate PDF by a wrapper script.
+A professional Curriculum Vitae authored in LaTeX with multiple variants (academic, industry, role-specific) managed via Git branches. The `main` branch holds shared content only; variant branches (`academic`, `industry`) hold their respective tailored versions; short-lived `role/<name>` branches off the templates carry per-application tailoring.
 
 ## Directory Structure
+
 ```
 kyle_wong_cv/
-├── .github/workflows/    # GitHub Actions automation
+├── .github/workflows/    # (variant branches only) CI build of the CV PDF
 ├── .gitignore
-├── build_cv.ps1          # Build script (PowerShell, Windows)
-├── build_cv.sh           # Build script (Bash, macOS/Linux)
 ├── archive_role.ps1      # Helper: archive a role/<name> branch as a dated tag (PowerShell)
 ├── archive_role.sh       # Helper: archive a role/<name> branch as a dated tag (Bash)
-├── main.tex              # LaTeX shell: preamble, \input{}s of sections, document body
-├── industry.tex          # Wrapper: sets \isacademic=0, \input{main.tex}
-├── academic.tex          # Wrapper: sets \isacademic=1, \input{main.tex}
-├── sections/             # Per-section LaTeX files, one \newcommand{\sectionX}{...} each
-│   ├── education.tex
-│   ├── research.tex
-│   ├── honours.tex
-│   ├── skills.tex
-│   ├── presentations.tex
-│   ├── repos.tex
-│   ├── courses.tex
-│   ├── research_interests.tex
-│   ├── relevant_experience.tex
-│   ├── languages.tex
-│   ├── memberships.tex
-│   ├── personal_interests.tex
-│   └── citizenships.tex
-├── kyle_wong_cv_*.pdf    # Compiled PDF outputs (tracked in Git)
+├── build_cv.ps1          # Build script (PowerShell, Windows) — builds the current branch's variant
+├── build_cv.sh           # Build script (Bash, macOS/Linux)   — builds the current branch's variant
+├── main.tex              # LaTeX shell: preamble + \input{}s of section files + body
+├── sections/             # One file per CV section
+│   ├── citizenships.tex          # SHARED (defined on main; inherited unchanged on variant branches)
+│   ├── courses.tex               # SHARED
+│   ├── education.tex             # VARIANT — stub on main, overridden per variant branch
+│   ├── header_summary.tex        # VARIANT — empty on main, populated on academic (summary paragraph)
+│   ├── honours.tex               # SHARED
+│   ├── languages.tex             # SHARED
+│   ├── memberships.tex           # SHARED
+│   ├── personal_interests.tex    # SHARED
+│   ├── presentations.tex         # SHARED
+│   ├── relevant_experience.tex   # SHARED
+│   ├── repos.tex                 # VARIANT — stub on main, overridden per variant branch
+│   ├── research.tex              # VARIANT — stub on main, overridden per variant branch
+│   ├── research_interests.tex    # SHARED
+│   ├── section_order.tex         # VARIANT — empty on main; each variant branch supplies its own \sectionX invocation list
+│   └── skills.tex                # VARIANT — stub on main, overridden per variant branch
+├── kyle_wong_cv_*.pdf    # (variant branches only) compiled PDF, named by month_year_branch
 ├── README.md             # This file
 ├── docs/                 # Documentation hub
 └── references.bib        # BibTeX bibliography (currently unused)
 ```
+
+`main` does not commit a built PDF; the variant branches each commit their own.
 
 ## Prerequisites
 
@@ -41,117 +44,111 @@ A LaTeX distribution providing `pdflatex`:
 - **Windows**: [MiKTeX](https://miktex.org/) — tested with MiKTeX 24.1. MiKTeX prompts to install any missing packages on first compile.
 - **macOS / Linux**: [TeX Live](https://tug.org/texlive/) or [MacTeX](https://tug.org/mactex/), with the standard `texlive-latex-recommended` and `texlive-latex-extra` collections.
 
-Required LaTeX packages (all standard): `extarticle`, `geometry`, `titlesec`, `enumitem`, `xcolor`, `hyperref`, `tabularx`, `fancyhdr`, `datetime`, `multicol`, `etoolbox`, `lmodern`, `fmtcount`.
+Required LaTeX packages (all standard): `extarticle`, `geometry`, `titlesec`, `enumitem`, `xcolor`, `hyperref`, `tabularx`, `fancyhdr`, `datetime`, `multicol`, `lmodern`, `fmtcount`.
 
-Optional, for verifying PDF output is unchanged after source edits: `pdftotext` and `pdfinfo` from the Poppler tools (bundled with MiKTeX; `brew install poppler` on macOS; `apt install poppler-utils` on Linux).
+Optional, for verifying that PDF output is unchanged after source edits: `pdftotext` and `pdfinfo` from the Poppler tools (bundled with MiKTeX; `brew install poppler` on macOS; `apt install poppler-utils` on Linux).
 
 ## How to Build
 
-Each invocation produces one PDF named `kyle_wong_cv_<month>_<year>_<version>.pdf` in the repo root, automatically replacing the previous PDF for that version.
+The build is variant-driven by **which branch you currently have checked out**. The output PDF is named `kyle_wong_cv_<month>_<year>_<branch>.pdf` (forward slashes in branch names become hyphens).
 
 ### Windows (PowerShell)
 
 ```powershell
-.\build_cv.ps1 -industry
-.\build_cv.ps1 -academic
+git checkout academic        # or industry, or role/<name>
+.\build_cv.ps1
 ```
 
 ### macOS / Linux (Bash)
 
 ```bash
-./build_cv.sh --industry
-./build_cv.sh --academic
+git checkout academic        # or industry, or role/<name>
+./build_cv.sh
 ```
 
-Note: PowerShell uses a single dash (`-industry`); Bash uses two (`--industry`).
-
-### What the build scripts do
-
-Each script prepends `\def\isacademic{0|1}` to the input passed to `pdflatex`, which `main.tex` reads to select between `\academicversion{...}` and `\industryversion{...}` content. The script then renames the output PDF and cleans up `.aux`, `.log`, and similar intermediate files.
+`main` builds successfully but produces a near-empty PDF (just the header), because section content lives only on variant branches.
 
 ## How to Edit
 
-The source is structured so that editing one section of the CV means opening one short file under `sections/`. The four common cases:
+The architecture defines what lives where:
 
-### 1. Edit shared content (appears in both PDFs)
+- **`main`** holds the sections that are identical across every variant — Honours, Presentations, Courses, Research Interests, Relevant Experience, Languages, Memberships, Personal Interests, Citizenships — plus the LaTeX shell (`main.tex`, build scripts).
+- **`academic`** and **`industry`** are long-lived **template branches**. Each carries its own full content for the variant-specific sections (Education, Research, Repos, Skills), its own `section_order.tex`, and (for academic only) the summary paragraph in `header_summary.tex`.
+- **`role/<name>`** are short-lived per-application branches, forked off the relevant template (`industry` for industry-flavoured roles, `academic` for academic-flavoured), then tailored, built, submitted, and archived. See [§Role-Specific Variants](#role-specific-variants).
 
-Open the relevant section file under `sections/` and edit the line directly. Example: to add a new course, open `sections/courses.tex` and add a new `\item` line inside the existing `itemize` block — no toggle needed.
+### Editing shared content
 
-### 2. Edit version-specific content (appears in only one PDF)
+Examples: updating contact info, adding a new course, fixing a typo in Memberships, adding a new language.
 
-Wrap the content in the appropriate toggle macro inside the section file:
+1. Check out `main`: `git checkout main`.
+2. Edit the relevant `sections/*.tex` file under `sections/` (only shared sections — Honours, Courses, Languages, etc. — live on `main`).
+3. Commit and push.
+4. **Propagate to variant branches**:
+   ```bash
+   git checkout academic && git rebase main
+   git checkout industry && git rebase main
+   ```
+   (Repeat for any live `role/<name>` branches that should pick up the change.)
 
-- `\academicversion{...}` — content appears only in the academic PDF.
-- `\industryversion{...}` — content appears only in the industry PDF.
+This is the manual-sync cost of the branch-based architecture. It is bounded by how often shared edits happen — typically rare for a CV (address changes, occasional new course or membership).
 
-Example: to add a bullet that only appears in the industry version of `Skills`, open `sections/skills.tex` and add:
+### Editing variant-specific content
 
-```latex
-\industryversion{\item \textbf{Foo:} Description of foo.}
-```
+Examples: rephrasing the Research bullets for industry framing, adding an industry-only Skills item, reordering sections for academic.
 
-### 3. Same underlying fact, different phrasing per version
+1. Check out the relevant variant branch: `git checkout academic` (or `industry`, or `role/<name>`).
+2. Edit the section file directly. For Research, Repos, Skills, Education, or the academic summary, the variant branch has its own version of the file with content directly written (no toggle macros — the branch IS the variant selector).
+3. Build to verify: `.\build_cv.ps1` (or `./build_cv.sh`).
+4. Commit and push.
 
-Use both toggles back-to-back. The academic build renders the first; the industry build renders the second. Real example from `sections/research.tex`:
+Variant-specific edits do **not** propagate to other branches. Industry's Research wording stays on `industry`; academic's stays on `academic`.
 
-```latex
-\academicversion{\item Research topic: implementation and statistical testing of variable initial conditions...}
-\industryversion{\item Implemented and statistically validated variable cosmological initial conditions...}
-```
+### Reordering sections (per variant)
 
-### 4. Reorder sections (or include/exclude a section per version)
+Each variant branch has its own `sections/section_order.tex` containing the literal list of `\sectionX` invocations in the desired order, with `\newpage` calls where needed. Edit this file on the relevant branch to change ordering.
 
-Section ordering lives in `main.tex` inside the `\ifbool{academic}{...}{...}` block in the document body. The first branch is the academic order; the second is the industry order. To move a section, change its position in the list; to exclude it from one version, remove its invocation from that branch.
+Example (academic's `sections/section_order.tex`):
 
 ```latex
 \sectionEducation
 \sectionResearch
-\ifbool{academic}{
-  \newpage
-  \sectionHonours
-  \sectionSkills
-  ...
-}{
-  \sectionRepos
-  \newpage
-  ...
-}
+\newpage
+\sectionHonours
+\sectionSkills
+...
 ```
 
 ### Adding a new section
 
-1. Create `sections/new_section.tex` with one `\newcommand{\sectionNewName}{...}` definition.
-2. Add `\input{sections/new_section.tex}` to the `% Section Definitions` block in `main.tex` (after the preamble, before `\begin{document}`).
-3. Invoke `\sectionNewName` in the appropriate branch(es) of the `\ifbool{academic}{...}{...}` ordering block.
-
-### Editing the header (name, contact info, academic summary)
-
-The header lives in `main.tex` inside the `\begin{flushleft}...\end{flushleft}` block, not in a section file. The academic-only summary paragraph is wrapped in `\academicversion{...}` there.
+1. On `main`: create `sections/new_section.tex` with `\newcommand{\sectionNewName}{}` (stub).
+2. On `main`: add `\input{sections/new_section.tex}` to the `% Section Definitions` block in `main.tex`.
+3. Commit, push, and rebase the variant branches.
+4. On each variant branch that should include the section: override `sections/new_section.tex` with the populated `\newcommand{\sectionNewName}{...}`, and add `\sectionNewName` at the desired position in that branch's `sections/section_order.tex`. Build to verify.
 
 ## Version Control Strategy
 
-This repository uses **LaTeX conditional compilation** (`etoolbox` package) to maintain both versions from a single source. The toggle macros `\academicversion{...}` and `\industryversion{...}` wrap content that should appear in only one version; everything else is shared. This ensures that core information (Education, Skills, Contact Info) is always synchronized across both versions.
+The repo uses a **multi-branch architecture** for managing CV variants:
 
-The source is split for editability:
+- **`main`**: shared content only. Holds the LaTeX shell (`main.tex`, build scripts) and the section files for the sections that are identical across every variant. The variant-specific section files (Education, Research, Repos, Skills, plus `header_summary.tex` and `section_order.tex`) exist on `main` as **stubs** — empty `\newcommand` definitions and empty include files — so the LaTeX structure is complete but `main` itself builds only the header.
 
-- `main.tex` holds the preamble, the toggle definitions, the document body, and the conditional section-ordering block.
-- `sections/*.tex` each define a single `\newcommand{\sectionX}{...}` for one CV section. `main.tex` pulls them in via `\input{}` before `\begin{document}`.
-- `industry.tex` and `academic.tex` are 2-line wrappers that set `\isacademic` and `\input{main.tex}`. They are the files passed to `pdflatex` (via the build scripts).
+- **`academic`** and **`industry`**: long-lived **template branches**. Each branch overrides the stub files with its own variant-specific content. To get the academic CV: check out `academic` and build. Similarly for industry. The branch IS the variant-selection mechanism — no toggle macros, no `\isacademic`, no wrapper files.
 
-Editing one section means opening one short file under `sections/` — no need to scroll through the full document.
+- **`role/<name>`**: short-lived **per-application branches**. Branched off `industry` (or `academic`) for a specific job application, tailored, submitted, then archived as a tag and deleted. See [§Role-Specific Variants](#role-specific-variants).
 
-The `main` branch is the primary branch for both development and Overleaf synchronization.
+**Why branches and not toggle macros?** With N variants, the toggle approach scales linearly badly in source-file clutter (each version-specific bullet would carry N adjacent wrappers). The branch approach scales linearly badly in sync ritual (each shared edit needs to be merged into N branches). For a CV — where shared edits are infrequent (an address change, a new course) and version-specific edits are frequent (tailoring for each application) — branches win on total cost.
 
-A previous multi-branch strategy (e.g., `quant-cv-updates`) was retired in favour of this single-source workflow to prevent version desynchronization; Git branches do not automatically inherit changes from one another, so long-lived parallel branches drift unless every shared edit is manually propagated.
+**Sync flow**: shared edit → `main` → `git rebase main` into `academic` → `git rebase main` into `industry` → `git rebase industry` (or `academic`) into any live `role/<name>` branches.
+
+**Historical note**: an earlier iteration of this repo used `etoolbox` toggle macros (`\academicversion{...}` / `\industryversion{...}`) inside section files on a single `main` branch. That approach was retired in favour of the current branch-based one because the toggle source clutter grew with the number of variants the user needed to maintain. The toggle mechanism, the wrapper files (`industry.tex`, `academic.tex`), and the `\isacademic` boolean have all been removed; the same role is now played by the branch you have checked out.
 
 ## Role-Specific Variants
 
-For per-application CV variants (e.g., tailoring for a specific quant firm or research role), use short-lived Git branches off `main` rather than additional toggle macros. Toggle macros are the right tool for the *persistent* academic-vs-industry split; *transient* per-application variants are short-lived enough that branch drift is bounded by their lifetime.
+For per-application CV variants (e.g., tailoring for a specific quant firm or research role), use short-lived Git branches off the relevant template (`industry` for industry-flavoured roles, `academic` for academic-flavoured).
 
 ### When to use this workflow
 
-- **Yes**: one-shot tailoring for a specific application (e.g., emphasise quantitative-finance bullets for a quant fund; reorder sections to put Repos first for a software role).
-- **No**: any change that should appear in all future CVs — that belongs on `main` (edit the section file directly, or wrap in `\academicversion{...}` / `\industryversion{...}` if version-specific).
+- **Yes**: one-shot tailoring for a specific application (emphasise quantitative-finance bullets for a quant fund; reorder sections to put Repos first for a software role).
+- **No**: any change that should appear in all future CVs — that belongs on the relevant template (or on `main`, if it's shared).
 
 ### Branch naming convention
 
@@ -160,20 +157,21 @@ For per-application CV variants (e.g., tailoring for a specific quant firm or re
 
 ### Step-by-step workflow
 
-1. **Sync `main` and branch off it**:
+1. **Sync the template and branch off it**:
    ```bash
-   git checkout main
+   git checkout industry        # or academic, depending on which template fits
    git pull
-   git checkout -b role/quant-firm-x main
+   git rebase main              # optional: pick up any new shared content from main
+   git checkout -b role/quant-firm-x industry
    ```
 
-2. **Tailor for the role**: edit `sections/*.tex` (and `main.tex` if you need to reorder sections). Changes here only affect this role's variant; `main` is untouched.
+2. **Tailor for the role**: edit `sections/*.tex` (and `sections/section_order.tex` if you want a different ordering for this role). The changes only affect this role's variant; the template is untouched.
 
-3. **Build the PDF** using whichever base wrapper applies:
+3. **Build the PDF**:
    ```powershell
-   .\build_cv.ps1 -industry        # or -academic
+   .\build_cv.ps1
    ```
-   (Bash: `./build_cv.sh --industry`.)
+   (Bash: `./build_cv.sh`.) Output: `kyle_wong_cv_<month>_<year>_role-quant-firm-x.pdf`.
 
 4. **Submit the PDF** to the application.
 
@@ -199,22 +197,21 @@ git checkout -b role/quant-firm-x archive/role-quant-firm-x-2026-05-12
 git tag -l "archive/role-*"
 ```
 
-### Syncing a live role branch with `main` updates
+### Syncing a live role branch with template updates
 
-If `main` is updated while your role branch is still active (e.g., you fix a typo in a shared section, add a new membership, etc.), bring the role branch up to date:
+If `industry` (or `academic`) is updated while your role branch is still active, bring the role branch up to date:
 
 ```bash
 git checkout role/quant-firm-x
-git rebase main
+git rebase industry        # or academic, whichever it was branched from
 ```
 
-Rebase rather than merge: role branches are short-lived, linear history is cleaner, and you don't want merge commits cluttering the archived tag.
+Rebase rather than merge: role branches are short-lived; linear history is cleaner.
 
 ### What NOT to do
 
-- **Don't commit a role-tailored PDF to `main`.** The build script names the PDF identically regardless of branch (e.g., `kyle_wong_cv_may_2026_industry.pdf`). On a role branch: build, submit, archive — do not push that PDF back to `main`.
-- **Don't use `role/` branches for the academic-vs-industry split.** That stays on `main` via toggle macros, for the reasons in §Version Control Strategy above.
-- **Don't let role branches accumulate un-archived.** List them periodically with `git branch` (or `git branch | findstr "role/"` on Windows, `git branch | grep '^  role/'` on Unix) and archive each one whose application has been settled.
+- **Don't commit a role-tailored PDF to `main` or to the template branches.** The PDF lives on the role branch (and survives via the archive tag). Templates only carry their own variant's PDF.
+- **Don't let role branches accumulate un-archived.** List them periodically with `git branch | findstr "role/"` (Windows) or `git branch | grep '^  role/'` (Unix) and archive each one whose application has been settled.
 
 ## Documentation
 
