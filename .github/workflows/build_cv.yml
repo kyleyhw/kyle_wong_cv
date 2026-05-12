@@ -1,0 +1,36 @@
+name: Build CV (academic)
+
+on:
+  push:
+    paths:
+      - 'main.tex'
+      - 'sections/**'
+      - 'references.bib'
+      - '.github/workflows/build_cv.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+
+      - name: Rename PDF by branch
+        run: |
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          BRANCH_FILE="${BRANCH//\//-}"
+          MONTH=$(date +%b | tr '[:upper:]' '[:lower:]')
+          YEAR=$(date +%Y)
+          mv main.pdf "kyle_wong_cv_${MONTH}_${YEAR}_${BRANCH_FILE}.pdf"
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-pdf
+          path: kyle_wong_cv_*.pdf
