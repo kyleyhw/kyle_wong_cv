@@ -1,4 +1,4 @@
-name: Build CV (role/quant)
+name: Build CV (industry-quant)
 
 on:
   push:
