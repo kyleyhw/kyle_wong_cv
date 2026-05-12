@@ -1,45 +1,48 @@
 # Kyle Wong CV: Documentation Hub
 
-This repository contains the LaTeX source and compiled PDFs for my curriculum vitae. It produces dual-version output (Industry and Academic) from a single modular source, with builds automated via GitHub Actions on push to `main`.
+This repository contains the LaTeX source and compiled PDFs for my curriculum vitae. It produces multiple variants (industry, academic, and per-application role variants) via a Git-branch-based architecture, with the build determined by the currently-checked-out branch.
 
 For build instructions, editing guidance, and the full directory layout, see the [main README](../README.md).
 
 ## Compiled PDFs
 
-The latest compiled PDFs live in the repo root, named `kyle_wong_cv_<month>_<year>_<version>.pdf`. Filenames are dated by build month and replaced in place each rebuild:
+Compiled PDFs live on the **variant branches**, not on `main`. Each variant branch carries its own built PDF named `kyle_wong_cv_<month>_<year>_<branch>.pdf` (the build script names the file after the current branch).
 
-- **Industry CV**: `kyle_wong_cv_<month>_<year>_industry.pdf` — tailored for data science, software engineering, and quantitative research roles.
-- **Academic CV**: `kyle_wong_cv_<month>_<year>_academic.pdf` — tailored for research fellowships and postgraduate applications.
+- **Industry CV**: check out the `industry` branch — `kyle_wong_cv_<month>_<year>_industry.pdf` — tailored for data science, software engineering, and quantitative research roles.
+- **Academic CV**: check out the `academic` branch — `kyle_wong_cv_<month>_<year>_academic.pdf` — tailored for research fellowships and postgraduate applications.
+- **Per-application role variants**: short-lived `role/<name>` branches forked off `industry` or `academic`; see [README §Role-Specific Variants](../README.md#role-specific-variants).
 
 ## Automation
 
-`.github/workflows/build_cv.yml` rebuilds both PDFs via [`xu-cheng/latex-action`](https://github.com/xu-cheng/latex-action) on every push to `main` that touches `main.tex`, the wrapper files, `references.bib`, or anything under `sections/**`.
+CI lives on the variant branches (not on `main`, since `main` doesn't build a complete CV). `.github/workflows/build_cv.yml` on `academic` / `industry` triggers on push and rebuilds the PDF via [`xu-cheng/latex-action`](https://github.com/xu-cheng/latex-action), uploading the result as a workflow artifact.
 
 ## Version Control Strategy
 
-This project uses a **single-source** workflow:
+The repo uses a **multi-branch architecture** for CV variants:
 
-- **Source split**: `main.tex` provides the preamble, toggle macros, document body, and conditional section-ordering block. Each CV section lives in its own file under `sections/`, pulled in via `\input{}`. The wrapper files `industry.tex` and `academic.tex` set the `\isacademic` toggle and load `main.tex`.
-- **Conditional compilation**: `etoolbox` `\ifbool` powers two macros, `\academicversion{...}` and `\industryversion{...}`, which mark content that should appear in only one version. Shared content is written once.
-- **Branching**: `main` is the primary branch for development and Overleaf synchronization. A prior multi-branch strategy was retired because Git branches do not inherit changes from one another, so long-lived parallel branches drift unless every shared edit is manually propagated.
+- **`main`**: shared content only. Holds the LaTeX shell (`main.tex`, build scripts) and section files for sections that are identical across every variant (Honours, Presentations, Courses, Research Interests, Relevant Experience, Languages, Memberships, Personal Interests, Citizenships). Variant-specific section files (Education, Research, Repos, Skills) and the variant-specific include files (`sections/header_summary.tex`, `sections/section_order.tex`) exist on `main` as **empty stubs**, so the LaTeX structure is complete but `main` itself builds only the header.
+- **`academic`** and **`industry`**: long-lived **template branches**. Each overrides the stub files on `main` with full variant-specific content. The branch IS the variant-selection mechanism — no toggle macros, no wrapper files.
+- **`role/<name>`**: short-lived **per-application branches**, forked off the relevant template, tailored for one application, archived as a tag after submission.
 
-For one-shot tailored variants per job application (e.g., emphasising different bullets for a specific quant firm or research role), the repo uses short-lived `role/<name>` branches off `main`, archived as `archive/role-<name>-YYYY-MM-DD` tags after submission. The persistent academic-vs-industry split remains on `main` via toggles; only transient per-application tailoring uses branches, because their bounded lifetime bounds the drift cost. See the [README §Role-Specific Variants](../README.md#role-specific-variants) section for the full workflow and the `archive_role.ps1` / `archive_role.sh` helper scripts.
+**Sync flow**: shared edit → `main` → `git rebase main` into `academic` and `industry` → `git rebase industry` (or `academic`) into any live `role/<name>` branches.
+
+**Why branches?** Toggle macros scale linearly badly in source clutter with N variants; branches scale linearly badly in sync ritual with shared-edit frequency. For a personal CV — where shared edits are infrequent (an address change, a new course) and version-specific edits are frequent (tailoring per application) — branches win on total cost. An earlier toggle-based iteration (`etoolbox` macros, `\isacademic` boolean, wrapper files) has been retired; that approach lives in git history if you want to reference it.
+
+For the full workflow including reviving archives, syncing, and the `archive_role.ps1` / `archive_role.sh` helper scripts, see the [README §Role-Specific Variants](../README.md#role-specific-variants) section.
 
 ## Directory Structure
 
 ```
 kyle_wong_cv/
-├── .github/workflows/    # GitHub Actions automation
+├── .github/workflows/    # (variant branches only) CI build of the CV PDF
 ├── .gitignore
-├── build_cv.ps1          # Build script (PowerShell, Windows)
-├── build_cv.sh           # Build script (Bash, macOS/Linux)
 ├── archive_role.ps1      # Helper: archive a role/<name> branch (PowerShell)
 ├── archive_role.sh       # Helper: archive a role/<name> branch (Bash)
+├── build_cv.ps1          # Build script (PowerShell, Windows) — builds the current branch's variant
+├── build_cv.sh           # Build script (Bash, macOS/Linux)
 ├── main.tex              # LaTeX shell: preamble + \input{}s + body
-├── industry.tex          # Build entry: \def\isacademic{0}\input{main.tex}
-├── academic.tex          # Build entry: \def\isacademic{1}\input{main.tex}
-├── sections/             # 13 per-section files; one \newcommand{\sectionX}{...} each
-├── kyle_wong_cv_*.pdf    # Compiled PDFs (tracked in Git)
+├── sections/             # One file per CV section (some shared, some variant-specific)
+├── kyle_wong_cv_*.pdf    # (variant branches only) compiled PDF
 ├── README.md             # Project overview, build, and editing guide
 ├── docs/                 # This documentation hub
 └── references.bib        # BibTeX bibliography (currently unused)

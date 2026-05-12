@@ -1,45 +1,29 @@
 #!/usr/bin/env bash
 # build_cv.sh
-# Builds the CV using pdflatex and renames it to the requested format.
-# Requires a mandatory flag: --industry or --academic
-# macOS/Linux equivalent of build_cv.ps1
+# Builds the CV from the current Git branch using pdflatex and names the
+# output by month, year, and branch. The branch determines the CV variant.
 
 set -euo pipefail
 
-usage() {
-    echo "Usage: $0 (--industry|--academic)" >&2
-    exit 1
-}
+cd "$(dirname "$0")"
 
-if [ $# -ne 1 ]; then
-    usage
+branch=$(git branch --show-current)
+if [ -z "$branch" ]; then
+    echo "Could not determine the current Git branch. Are you in a Git working tree?" >&2
+    exit 1
 fi
 
-case "$1" in
-    --industry)
-        version="industry"
-        latex_toggle='\def\isacademic{0}'
-        ;;
-    --academic)
-        version="academic"
-        latex_toggle='\def\isacademic{1}'
-        ;;
-    *)
-        usage
-        ;;
-esac
-
-cd "$(dirname "$0")"
+# Branch names may contain '/' (e.g. role/quant-firm-x); normalise for filename.
+branch_file=$(echo "$branch" | tr '/' '-')
 
 month=$(date +%b | tr '[:upper:]' '[:lower:]')
 year=$(date +%Y)
-target="kyle_wong_cv_${month}_${year}_${version}.pdf"
+target="kyle_wong_cv_${month}_${year}_${branch_file}.pdf"
 
-echo "Cleaning up old ${version} PDFs..."
-find . -maxdepth 1 -type f -name "kyle_wong_cv_*_${version}.pdf" -delete
+echo "Building CV from branch '${branch}'..."
+find . -maxdepth 1 -type f -name "kyle_wong_cv_*_${branch_file}.pdf" -delete
 
-echo "Building ${version} CV..."
-pdflatex -interaction=nonstopmode -halt-on-error -jobname=temp_build "${latex_toggle}\input{main.tex}"
+pdflatex -interaction=nonstopmode -halt-on-error -jobname=temp_build "\input{main.tex}"
 
 if [ ! -f temp_build.pdf ]; then
     echo "pdflatex failed: PDF was not generated." >&2
@@ -49,6 +33,5 @@ fi
 mv temp_build.pdf "${target}"
 echo "Successfully built ${target}"
 
-# Cleanup auxiliary files
 rm -f temp_build.aux temp_build.log temp_build.out temp_build.toc temp_build.blg temp_build.bbl temp_build.fls temp_build.fdb_latexmk
 echo "Cleanup complete."
