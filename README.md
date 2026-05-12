@@ -127,19 +127,89 @@ Example (academic's `sections/section_order.tex`):
 
 ## Version Control Strategy
 
-The repo uses a **multi-branch architecture** for managing CV variants:
+This repository uses a **multi-branch architecture** for managing CV variants. Reading this section will tell you what's where, why this design was chosen over the alternative, and what trade-offs were accepted.
 
-- **`main`**: shared content only. Holds the LaTeX shell (`main.tex`, build scripts) and the section files for the sections that are identical across every variant. The variant-specific section files (Education, Research, Repos, Skills, plus `header_summary.tex` and `section_order.tex`) exist on `main` as **stubs** — empty `\newcommand` definitions and empty include files — so the LaTeX structure is complete but `main` itself builds only the header.
+### The architecture
 
-- **`academic`** and **`industry`**: long-lived **template branches**. Each branch overrides the stub files with its own variant-specific content. To get the academic CV: check out `academic` and build. Similarly for industry. The branch IS the variant-selection mechanism — no toggle macros, no `\isacademic`, no wrapper files.
+- **`main`**: shared content only. Holds the LaTeX shell (`main.tex`, build scripts) and the section files for sections identical across every variant. The variant-specific section files (`education`, `research`, `repos`, `skills`) and the include files (`header_summary`, `section_order`) exist as **empty stubs** — empty `\newcommand` definitions and comment-only include files — so the LaTeX structure is complete but `main` itself builds only the header.
 
-- **`role/<name>`**: short-lived **per-application branches**. Branched off `industry` (or `academic`) for a specific job application, tailored, submitted, then archived as a tag and deleted. See [§Role-Specific Variants](#role-specific-variants).
+- **`academic`** and **`industry`**: long-lived **template branches**, each overriding the stubs with its own variant-specific content. Building from either branch produces the corresponding CV. The branch IS the variant-selection mechanism — no toggle macros, no `\isacademic` boolean, no wrapper files.
 
-**Why branches and not toggle macros?** With N variants, the toggle approach scales linearly badly in source-file clutter (each version-specific bullet would carry N adjacent wrappers). The branch approach scales linearly badly in sync ritual (each shared edit needs to be merged into N branches). For a CV — where shared edits are infrequent (an address change, a new course) and version-specific edits are frequent (tailoring for each application) — branches win on total cost.
+- **`role/<name>`**: short-lived **per-application branches**, forked off the relevant template for a specific job application, then tailored, submitted, and archived as a tag. See [§Role-Specific Variants](#role-specific-variants).
 
-**Sync flow**: shared edit → `main` → `git rebase main` into `academic` → `git rebase main` into `industry` → `git rebase industry` (or `academic`) into any live `role/<name>` branches.
+### Why branches, and not toggle macros?
 
-**Historical note**: an earlier iteration of this repo used `etoolbox` toggle macros (`\academicversion{...}` / `\industryversion{...}`) inside section files on a single `main` branch. That approach was retired in favour of the current branch-based one because the toggle source clutter grew with the number of variants the user needed to maintain. The toggle mechanism, the wrapper files (`industry.tex`, `academic.tex`), and the `\isacademic` boolean have all been removed; the same role is now played by the branch you have checked out.
+An earlier iteration of this repository used `etoolbox` toggle macros — `\academicversion{X}` expanded to `X` when the academic boolean was set, otherwise to nothing; `\industryversion{X}` did the inverse. A single source tree on `main` carried both variants' content; thin wrapper files (`industry.tex`, `academic.tex`) set the toggle and built the corresponding PDF. That worked for N = 2 variants.
+
+It does not scale. Each additional persistent variant — say a quant-fund template, or an ML-research template — would need its own toggle macro (`\quantversion{...}`, `\mlversion{...}`). Every version-specific piece of content would then carry **N adjacent wrappers**, e.g.
+
+```latex
+\academicversion{\item Investigated ...}\industryversion{\item Implemented ...}\quantversion{\item Built a high-frequency ...}\mlversion{\item Trained a transformer ...}
+```
+
+Section files clutter linearly with N. Editing one variant means visually filtering past the other N − 1 variants' phrasings of the same fact on adjacent lines. Adding a new variant means revisiting every version-conditional bullet across every section file and wrapping it again.
+
+Branches sidestep that clutter entirely: each branch's section files contain *only* that branch's content, with no toggle macros. Reading or editing the academic version means looking at files that contain only academic prose; there is nothing else on the page to filter past.
+
+### What's the trade-off?
+
+Branches have a real cost: **manual sync on shared edits**. Any change that should appear in *every* variant — an address update, a new course, a typo fix in a shared bullet, a new club membership — must be made on `main` and then propagated into each variant branch by rebase. For N branches, that's O(N) git operations per shared edit.
+
+The trade-off is favourable when:
+
+- **Shared edits are infrequent.** For a CV: address changes happen rarely, new courses every few months, typo fixes occasionally. Maybe once a month total.
+- **Variant-specific edits are frequent.** Every job application produces a new tailored variant.
+- **N is open-ended.** New role variants will keep appearing over a job-search career.
+
+Branches strictly win in that regime. The toggle-clutter cost dominates if you stay with toggles; the sync cost is bounded and predictable with branches.
+
+**Decision matrix** for choosing between the two:
+
+| Workload | Right tool |
+|---|---|
+| N = 2 persistent variants, frequent shared edits | Toggles |
+| N ≥ 3 persistent variants, infrequent shared edits | Branches |
+| Any number of short-lived per-application variants | Branches |
+| Strict simultaneous parity across variants required (e.g., test suites enforcing it) | Toggles (CI-enforced) |
+
+This repo's workload is the third row (plus a small dose of the second), so branches are the right choice. If the workload shifts — say, you stop tailoring per application and just maintain two CVs — reassess.
+
+### Why three tiers? (main → templates → role)
+
+The architecture is a two-level hierarchy rooted at `main`:
+
+| Tier | Branch(es) | What lives there | Lifetime | Builds a CV? |
+|---|---|---|---|---|
+| 1 | `main` | Shared content, LaTeX shell, build scripts, helpers | Forever | Header only |
+| 2 | `academic`, `industry` | Full variant content | Forever | Yes |
+| 3 | `role/<name>` | Per-application tailoring on top of a template | Days–weeks | Yes |
+
+Reasons for each tier:
+
+1. **`main` exists** so shared content has a single canonical source. Without it, shared edits would have to be made on each variant branch separately, with no canonical reference — guaranteed drift. With it, the sync direction is unambiguous (`main` → downstream).
+2. **Two templates exist** (rather than one) because academic and industry are structurally different enough — different section ordering, the academic-only summary paragraph, different research framings — that collapsing them into a single template would reintroduce conditional logic, defeating the point of branches.
+3. **Role branches exist** for per-application tailoring, which is intrinsically short-lived (you submit the PDF and don't tailor it again). Storing each role as a tag after submission preserves the snapshot without inflating the active branch list. Drift from the template is bounded by the role branch's lifetime (days to a few weeks), which keeps the sync cost negligible.
+
+### Sync flow
+
+When `main` updates (a shared edit), the change propagates outward:
+
+```bash
+git checkout main
+# edit, commit, push
+
+git checkout academic && git rebase main && git push --force-with-lease
+git checkout industry && git rebase main && git push --force-with-lease
+# repeat for any live role/<name> branches off either template
+```
+
+Each propagation is **opt-in**: downstream branches stay at their parent's previous state until you actively rebase. This is intentional — you may not want every shared edit to land on a live role branch mid-application.
+
+`--force-with-lease` is used because rebase rewrites the branch's commit history. It is safe here because variant branches are not shared with other contributors; for a multi-contributor repo, prefer `git merge main` (slower history but no rewrite).
+
+### Historical note
+
+An earlier iteration used `etoolbox` toggle macros (`\academicversion{...}` / `\industryversion{...}`) inside section files on a single `main` branch, with `industry.tex` / `academic.tex` wrapper files setting the `\isacademic` boolean. That approach was retired in commit `00f20bb` once the user's workload shifted from "maintain two static variants" to "produce many tailored variants per application". The toggle macros, the wrapper files, and the `\isacademic` boolean have all been removed; the same role is now played by the branch you have checked out.
 
 ## Role-Specific Variants
 
