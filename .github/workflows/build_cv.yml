@@ -9,6 +9,7 @@ on:
       - 'industry.tex'
       - 'academic.tex'
       - 'references.bib'
+      - 'sections/**'
   workflow_dispatch:
 
 jobs:
