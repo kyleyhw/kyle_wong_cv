@@ -9,6 +9,8 @@ kyle_wong_cv/
 ├── .gitignore
 ├── build_cv.ps1          # Build script (PowerShell, Windows)
 ├── build_cv.sh           # Build script (Bash, macOS/Linux)
+├── archive_role.ps1      # Helper: archive a role/<name> branch as a dated tag (PowerShell)
+├── archive_role.sh       # Helper: archive a role/<name> branch as a dated tag (Bash)
 ├── main.tex              # LaTeX shell: preamble, \input{}s of sections, document body
 ├── industry.tex          # Wrapper: sets \isacademic=0, \input{main.tex}
 ├── academic.tex          # Wrapper: sets \isacademic=1, \input{main.tex}
@@ -141,6 +143,78 @@ Editing one section means opening one short file under `sections/` — no need t
 The `main` branch is the primary branch for both development and Overleaf synchronization.
 
 A previous multi-branch strategy (e.g., `quant-cv-updates`) was retired in favour of this single-source workflow to prevent version desynchronization; Git branches do not automatically inherit changes from one another, so long-lived parallel branches drift unless every shared edit is manually propagated.
+
+## Role-Specific Variants
+
+For per-application CV variants (e.g., tailoring for a specific quant firm or research role), use short-lived Git branches off `main` rather than additional toggle macros. Toggle macros are the right tool for the *persistent* academic-vs-industry split; *transient* per-application variants are short-lived enough that branch drift is bounded by their lifetime.
+
+### When to use this workflow
+
+- **Yes**: one-shot tailoring for a specific application (e.g., emphasise quantitative-finance bullets for a quant fund; reorder sections to put Repos first for a software role).
+- **No**: any change that should appear in all future CVs — that belongs on `main` (edit the section file directly, or wrap in `\academicversion{...}` / `\industryversion{...}` if version-specific).
+
+### Branch naming convention
+
+- **Active branches**: `role/<short-name>` — e.g., `role/quant-firm-x`, `role/ml-startup-y`, `role/research-postdoc-cambridge`.
+- **Archived tags**: `archive/role-<short-name>-YYYY-MM-DD` — created at the branch tip after submission; the branch itself is deleted. The date suffix lets you re-apply to the same firm later without name collision.
+
+### Step-by-step workflow
+
+1. **Sync `main` and branch off it**:
+   ```bash
+   git checkout main
+   git pull
+   git checkout -b role/quant-firm-x main
+   ```
+
+2. **Tailor for the role**: edit `sections/*.tex` (and `main.tex` if you need to reorder sections). Changes here only affect this role's variant; `main` is untouched.
+
+3. **Build the PDF** using whichever base wrapper applies:
+   ```powershell
+   .\build_cv.ps1 -industry        # or -academic
+   ```
+   (Bash: `./build_cv.sh --industry`.)
+
+4. **Submit the PDF** to the application.
+
+5. **Archive the branch** as a dated tag and delete it (the included helper does this in one step):
+   ```powershell
+   .\archive_role.ps1 quant-firm-x
+   ```
+   (Bash: `./archive_role.sh quant-firm-x`.)
+
+   The helper creates `archive/role-quant-firm-x-YYYY-MM-DD`, pushes it to `origin`, and deletes the local + remote branch. It refuses to run if the branch is currently checked out, if it doesn't exist, or if a tag for today's date already exists for this role.
+
+### Reviving an archived variant
+
+To recreate the branch from an archive — e.g., re-applying to the same firm, or referencing what you submitted:
+
+```bash
+git checkout -b role/quant-firm-x archive/role-quant-firm-x-2026-05-12
+```
+
+### Listing all archives
+
+```bash
+git tag -l "archive/role-*"
+```
+
+### Syncing a live role branch with `main` updates
+
+If `main` is updated while your role branch is still active (e.g., you fix a typo in a shared section, add a new membership, etc.), bring the role branch up to date:
+
+```bash
+git checkout role/quant-firm-x
+git rebase main
+```
+
+Rebase rather than merge: role branches are short-lived, linear history is cleaner, and you don't want merge commits cluttering the archived tag.
+
+### What NOT to do
+
+- **Don't commit a role-tailored PDF to `main`.** The build script names the PDF identically regardless of branch (e.g., `kyle_wong_cv_may_2026_industry.pdf`). On a role branch: build, submit, archive — do not push that PDF back to `main`.
+- **Don't use `role/` branches for the academic-vs-industry split.** That stays on `main` via toggle macros, for the reasons in §Version Control Strategy above.
+- **Don't let role branches accumulate un-archived.** List them periodically with `git branch` (or `git branch | findstr "role/"` on Windows, `git branch | grep '^  role/'` on Unix) and archive each one whose application has been settled.
 
 ## Documentation
 

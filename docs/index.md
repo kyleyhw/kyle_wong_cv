@@ -23,6 +23,8 @@ This project uses a **single-source** workflow:
 - **Conditional compilation**: `etoolbox` `\ifbool` powers two macros, `\academicversion{...}` and `\industryversion{...}`, which mark content that should appear in only one version. Shared content is written once.
 - **Branching**: `main` is the primary branch for development and Overleaf synchronization. A prior multi-branch strategy was retired because Git branches do not inherit changes from one another, so long-lived parallel branches drift unless every shared edit is manually propagated.
 
+For one-shot tailored variants per job application (e.g., emphasising different bullets for a specific quant firm or research role), the repo uses short-lived `role/<name>` branches off `main`, archived as `archive/role-<name>-YYYY-MM-DD` tags after submission. The persistent academic-vs-industry split remains on `main` via toggles; only transient per-application tailoring uses branches, because their bounded lifetime bounds the drift cost. See the [README §Role-Specific Variants](../README.md#role-specific-variants) section for the full workflow and the `archive_role.ps1` / `archive_role.sh` helper scripts.
+
 ## Directory Structure
 
 ```
@@ -31,6 +33,8 @@ kyle_wong_cv/
 ├── .gitignore
 ├── build_cv.ps1          # Build script (PowerShell, Windows)
 ├── build_cv.sh           # Build script (Bash, macOS/Linux)
+├── archive_role.ps1      # Helper: archive a role/<name> branch (PowerShell)
+├── archive_role.sh       # Helper: archive a role/<name> branch (Bash)
 ├── main.tex              # LaTeX shell: preamble + \input{}s + body
 ├── industry.tex          # Build entry: \def\isacademic{0}\input{main.tex}
 ├── academic.tex          # Build entry: \def\isacademic{1}\input{main.tex}
