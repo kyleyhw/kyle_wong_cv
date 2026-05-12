@@ -1,17 +1,17 @@
 # Kyle Wong CV
 
-A professional Curriculum Vitae authored in LaTeX with multiple variants (academic, industry, role-specific) managed via Git branches. The `main` branch holds shared content only; variant branches (`academic`, `industry`) hold their respective tailored versions; short-lived `role/<name>` branches off the templates carry per-application tailoring.
+A professional Curriculum Vitae authored in LaTeX with multiple variants managed via Git branches. The `main` branch holds shared content only; the `academic` and `industry` branches are the base templates; further branches under those (`industry/quant`, `industry/quantum-consulting`, `academic/postdoc-...`, etc.) carry role-specific tailoring built on top of the relevant template.
 
 ## Directory Structure
 
 ```
 kyle_wong_cv/
-├── .github/workflows/    # (variant branches only) CI build of the CV PDF
+├── .github/workflows/    # (template/role branches only) CI build of the CV PDF
 ├── .gitignore
-├── archive_role.ps1      # Helper: archive a role/<name> branch as a dated tag (PowerShell)
-├── archive_role.sh       # Helper: archive a role/<name> branch as a dated tag (Bash)
+├── archive_branch.ps1    # Helper: archive any variant branch as a dated tag (PowerShell)
+├── archive_branch.sh     # Helper: archive any variant branch as a dated tag (Bash)
 ├── build_cv.ps1          # Build script (PowerShell, Windows) — builds the current branch's variant
-├── build_cv.sh           # Build script (Bash, macOS/Linux)   — builds the current branch's variant
+├── build_cv.sh           # Build script (Bash, macOS/Linux)
 ├── main.tex              # LaTeX shell: preamble + \input{}s of section files + body
 ├── sections/             # One file per CV section
 │   ├── citizenships.tex          # SHARED (defined on main; inherited unchanged on variant branches)
@@ -50,19 +50,19 @@ Optional, for verifying that PDF output is unchanged after source edits: `pdftot
 
 ## How to Build
 
-The build is variant-driven by **which branch you currently have checked out**. The output PDF is named `kyle_wong_cv_<month>_<year>_<branch>.pdf` (forward slashes in branch names become hyphens).
+The build is variant-driven by **which branch you currently have checked out**. The output PDF is named `kyle_wong_cv_<month>_<year>_<branch>.pdf` (forward slashes in branch names become hyphens — e.g., `industry/quant` becomes `industry-quant`).
 
 ### Windows (PowerShell)
 
 ```powershell
-git checkout academic        # or industry, or role/<name>
+git checkout academic              # or industry, industry/quant, academic/postdoc-..., etc.
 .\build_cv.ps1
 ```
 
 ### macOS / Linux (Bash)
 
 ```bash
-git checkout academic        # or industry, or role/<name>
+git checkout academic              # or industry, industry/quant, etc.
 ./build_cv.sh
 ```
 
@@ -72,36 +72,39 @@ git checkout academic        # or industry, or role/<name>
 
 The architecture defines what lives where:
 
-- **`main`** holds the sections that are identical across every variant — Honours, Presentations, Courses, Research Interests, Relevant Experience, Languages, Memberships, Personal Interests, Citizenships — plus the LaTeX shell (`main.tex`, build scripts).
-- **`academic`** and **`industry`** are long-lived **template branches**. Each carries its own full content for the variant-specific sections (Education, Research, Repos, Skills), its own `section_order.tex`, and (for academic only) the summary paragraph in `header_summary.tex`.
-- **`role/<name>`** are short-lived per-application branches, forked off the relevant template (`industry` for industry-flavoured roles, `academic` for academic-flavoured), then tailored, built, submitted, and archived. See [§Role-Specific Variants](#role-specific-variants).
+- **`main`** holds the sections identical across every variant — Honours, Presentations, Courses, Research Interests, Relevant Experience, Languages, Memberships, Personal Interests, Citizenships — plus the LaTeX shell (`main.tex`, build scripts, helper scripts).
+- **`academic`** and **`industry`** are long-lived **base templates**. Each carries its own full content for the variant-specific sections (Education, Research, Repos, Skills), its own `section_order.tex`, and (for academic only) the summary paragraph in `header_summary.tex`.
+- **`industry/<role>`** and **`academic/<role>`** are **role variant branches** forked off the relevant template (`industry/quant`, `industry/quantum-consulting`, `academic/postdoc-cambridge`, etc.). They can be long-lived (iterated across applications) or short-lived (one application, then archived). See [§Role-Specific Variants](#role-specific-variants).
 
 ### Editing shared content
 
 Examples: updating contact info, adding a new course, fixing a typo in Memberships, adding a new language.
 
 1. Check out `main`: `git checkout main`.
-2. Edit the relevant `sections/*.tex` file under `sections/` (only shared sections — Honours, Courses, Languages, etc. — live on `main`).
+2. Edit the relevant `sections/*.tex` file (only shared sections — Honours, Courses, Languages, etc. — live on `main`).
 3. Commit and push.
 4. **Propagate to variant branches**:
    ```bash
-   git checkout academic && git rebase main
-   git checkout industry && git rebase main
+   git checkout academic && git rebase main && git push --force-with-lease
+   git checkout industry && git rebase main && git push --force-with-lease
+   # then for each role variant:
+   git checkout industry/quant && git rebase industry && git push --force-with-lease
+   git checkout industry/quantum-consulting && git rebase industry && git push --force-with-lease
+   # ... etc.
    ```
-   (Repeat for any live `role/<name>` branches that should pick up the change.)
 
 This is the manual-sync cost of the branch-based architecture. It is bounded by how often shared edits happen — typically rare for a CV (address changes, occasional new course or membership).
 
 ### Editing variant-specific content
 
-Examples: rephrasing the Research bullets for industry framing, adding an industry-only Skills item, reordering sections for academic.
+Examples: rephrasing the Research bullets for industry framing, adding an industry-only Skills item, reordering sections for academic, emphasising quant projects on `industry/quant`.
 
-1. Check out the relevant variant branch: `git checkout academic` (or `industry`, or `role/<name>`).
-2. Edit the section file directly. For Research, Repos, Skills, Education, or the academic summary, the variant branch has its own version of the file with content directly written (no toggle macros — the branch IS the variant selector).
+1. Check out the relevant variant branch: `git checkout industry` (or `academic`, or `industry/quant`, etc.).
+2. Edit the section file directly. The variant branch has its own version of the file with content directly written (no toggle macros — the branch IS the variant selector).
 3. Build to verify: `.\build_cv.ps1` (or `./build_cv.sh`).
 4. Commit and push.
 
-Variant-specific edits do **not** propagate to other branches. Industry's Research wording stays on `industry`; academic's stays on `academic`.
+Variant-specific edits do **not** propagate to other branches. Industry's Research wording stays on `industry`; academic's stays on `academic`; quant-specific tailoring stays on `industry/quant`.
 
 ### Reordering sections (per variant)
 
@@ -131,11 +134,11 @@ This repository uses a **multi-branch architecture** for managing CV variants. R
 
 ### The architecture
 
-- **`main`**: shared content only. Holds the LaTeX shell (`main.tex`, build scripts) and the section files for sections identical across every variant. The variant-specific section files (`education`, `research`, `repos`, `skills`) and the include files (`header_summary`, `section_order`) exist as **empty stubs** — empty `\newcommand` definitions and comment-only include files — so the LaTeX structure is complete but `main` itself builds only the header.
+- **`main`**: shared content only. Holds the LaTeX shell (`main.tex`, build scripts, helper scripts) and the section files for sections identical across every variant. The variant-specific section files (`education`, `research`, `repos`, `skills`) and the include files (`header_summary`, `section_order`) exist as **empty stubs** — empty `\newcommand` definitions and comment-only include files — so the LaTeX structure is complete but `main` itself builds only the header.
 
-- **`academic`** and **`industry`**: long-lived **template branches**, each overriding the stubs with its own variant-specific content. Building from either branch produces the corresponding CV. The branch IS the variant-selection mechanism — no toggle macros, no `\isacademic` boolean, no wrapper files.
+- **`academic`** and **`industry`**: long-lived **base templates**, each overriding the stubs with its own variant-specific content. Building from either branch produces the corresponding CV. The branch IS the variant-selection mechanism — no toggle macros, no `\isacademic` boolean, no wrapper files.
 
-- **`role/<name>`**: short-lived **per-application branches**, forked off the relevant template for a specific job application, then tailored, submitted, and archived as a tag. See [§Role-Specific Variants](#role-specific-variants).
+- **`<template>/<role>`** (e.g., `industry/quant`, `industry/quantum-consulting`, `academic/postdoc-cambridge`): **role variant branches**, forked off the relevant template. The hierarchical naming encodes lineage: `git branch | grep industry/` lists all industry-derived variants. These can be long-lived (a quant template you iterate on across applications) or short-lived (one application, archived after submission). See [§Role-Specific Variants](#role-specific-variants).
 
 ### Why branches, and not toggle macros?
 
@@ -174,36 +177,41 @@ Branches strictly win in that regime. The toggle-clutter cost dominates if you s
 
 This repo's workload is the third row (plus a small dose of the second), so branches are the right choice. If the workload shifts — say, you stop tailoring per application and just maintain two CVs — reassess.
 
-### Why three tiers? (main → templates → role)
+### Why three tiers? (main → templates → role variants)
 
 The architecture is a two-level hierarchy rooted at `main`:
 
 | Tier | Branch(es) | What lives there | Lifetime | Builds a CV? |
 |---|---|---|---|---|
-| 1 | `main` | Shared content, LaTeX shell, build scripts, helpers | Forever | Header only |
-| 2 | `academic`, `industry` | Full variant content | Forever | Yes |
-| 3 | `role/<name>` | Per-application tailoring on top of a template | Days–weeks | Yes |
+| 1 | `main` | Shared content, LaTeX shell, build/archive helpers | Forever | Header only |
+| 2 | `academic`, `industry` | Full content for one base variant each | Forever | Yes |
+| 3 | `industry/<role>`, `academic/<role>` | Role-specific tailoring on top of a template | Variable | Yes |
 
 Reasons for each tier:
 
 1. **`main` exists** so shared content has a single canonical source. Without it, shared edits would have to be made on each variant branch separately, with no canonical reference — guaranteed drift. With it, the sync direction is unambiguous (`main` → downstream).
-2. **Two templates exist** (rather than one) because academic and industry are structurally different enough — different section ordering, the academic-only summary paragraph, different research framings — that collapsing them into a single template would reintroduce conditional logic, defeating the point of branches.
-3. **Role branches exist** for per-application tailoring, which is intrinsically short-lived (you submit the PDF and don't tailor it again). Storing each role as a tag after submission preserves the snapshot without inflating the active branch list. Drift from the template is bounded by the role branch's lifetime (days to a few weeks), which keeps the sync cost negligible.
+2. **Two base templates exist** (rather than one) because academic and industry are structurally different enough — different section ordering, the academic-only summary paragraph, different research framings — that collapsing them into a single template would reintroduce conditional logic, defeating the point of branches.
+3. **Role variant branches exist** for tailoring beyond the base templates. The hierarchical naming (`<template>/<role>`) makes lineage visible at a glance and supports symmetric extension on either side (`industry/quant`, `academic/postdoc-mit`, etc.). For an additional level of specificity, you can nest further: `industry/quant/citadel-2026` for a specific Citadel application off the quant template.
 
 ### Sync flow
 
-When `main` updates (a shared edit), the change propagates outward:
+When `main` updates (a shared edit), the change propagates outward through the hierarchy:
 
 ```bash
 git checkout main
 # edit, commit, push
 
+# Tier 2: rebase the base templates onto main
 git checkout academic && git rebase main && git push --force-with-lease
 git checkout industry && git rebase main && git push --force-with-lease
-# repeat for any live role/<name> branches off either template
+
+# Tier 3: rebase each live role variant onto its parent template
+git checkout industry/quant && git rebase industry && git push --force-with-lease
+git checkout industry/quantum-consulting && git rebase industry && git push --force-with-lease
+# ... etc. for any other live <template>/<role> branches
 ```
 
-Each propagation is **opt-in**: downstream branches stay at their parent's previous state until you actively rebase. This is intentional — you may not want every shared edit to land on a live role branch mid-application.
+Each propagation is **opt-in**: downstream branches stay at their parent's previous state until you actively rebase. This is intentional — you may not want every shared edit to land on a live role variant mid-application.
 
 `--force-with-lease` is used because rebase rewrites the branch's commit history. It is safe here because variant branches are not shared with other contributors; for a multi-contributor repo, prefer `git merge main` (slower history but no rewrite).
 
@@ -213,75 +221,69 @@ An earlier iteration used `etoolbox` toggle macros (`\academicversion{...}` / `\
 
 ## Role-Specific Variants
 
-For per-application CV variants (e.g., tailoring for a specific quant firm or research role), use short-lived Git branches off the relevant template (`industry` for industry-flavoured roles, `academic` for academic-flavoured).
-
-### When to use this workflow
-
-- **Yes**: one-shot tailoring for a specific application (emphasise quantitative-finance bullets for a quant fund; reorder sections to put Repos first for a software role).
-- **No**: any change that should appear in all future CVs — that belongs on the relevant template (or on `main`, if it's shared).
+For tailored CV variants beyond the base academic and industry templates — a quant-focused CV, a quantum-consulting CV, a CV emphasising scientific computing for a specific firm — fork a new branch off the relevant template.
 
 ### Branch naming convention
 
-- **Active branches**: `role/<short-name>` — e.g., `role/quant-firm-x`, `role/ml-startup-y`, `role/research-postdoc-cambridge`.
-- **Archived tags**: `archive/role-<short-name>-YYYY-MM-DD` — created at the branch tip after submission; the branch itself is deleted. The date suffix lets you re-apply to the same firm later without name collision.
+- **Role variants**: `<template>/<role>` — e.g., `industry/quant`, `industry/quantum-consulting`, `academic/postdoc-cambridge`. The `<template>` prefix encodes the branch's parent, so `git branch | grep industry/` lists all industry-derived variants. These can be long-lived (you keep iterating as your role understanding improves) or short-lived (one application then archived).
+- **Per-application sub-branches** (optional, if you want application-specific snapshots on top of a long-lived role template): `<template>/<role>/<application>` — e.g., `industry/quant/citadel-2026`, `academic/postdoc-cambridge/mit-cosmology-2026`.
+- **Archived tags**: `archive/<branch-with-slashes-as-dashes>-YYYY-MM-DD` — e.g., archiving `industry/quant` creates `archive/industry-quant-2026-05-12`; archiving `industry/quant/citadel-2026` creates `archive/industry-quant-citadel-2026-2026-05-12`.
 
 ### Step-by-step workflow
 
 1. **Sync the template and branch off it**:
    ```bash
-   git checkout industry        # or academic, depending on which template fits
+   git checkout industry           # or academic, depending on which template fits
    git pull
-   git rebase main              # optional: pick up any new shared content from main
-   git checkout -b role/quant-firm-x industry
+   git rebase main                 # optional: pick up any new shared content from main
+   git checkout -b industry/quant industry
    ```
 
-2. **Tailor for the role**: edit `sections/*.tex` (and `sections/section_order.tex` if you want a different ordering for this role). The changes only affect this role's variant; the template is untouched.
+2. **Tailor for the role**: edit `sections/*.tex` (and `sections/section_order.tex` if you want a different ordering). The changes only affect this variant; the template is untouched.
 
 3. **Build the PDF**:
    ```powershell
    .\build_cv.ps1
    ```
-   (Bash: `./build_cv.sh`.) Output: `kyle_wong_cv_<month>_<year>_role-quant-firm-x.pdf`.
+   Output: `kyle_wong_cv_<month>_<year>_industry-quant.pdf` (slash → hyphen for the filename).
 
-4. **Submit the PDF** to the application.
+4. **Submit the PDF** if applying immediately, or commit and keep iterating if maintaining as a long-lived template.
 
-5. **Archive the branch** as a dated tag and delete it (the included helper does this in one step):
+5. **Archive the branch** (when done with it) as a dated tag and delete it:
    ```powershell
-   .\archive_role.ps1 quant-firm-x
+   .\archive_branch.ps1 industry/quant
    ```
-   (Bash: `./archive_role.sh quant-firm-x`.)
+   (Bash: `./archive_branch.sh industry/quant`.)
 
-   The helper creates `archive/role-quant-firm-x-YYYY-MM-DD`, pushes it to `origin`, and deletes the local + remote branch. It refuses to run if the branch is currently checked out, if it doesn't exist, or if a tag for today's date already exists for this role.
+   The helper creates `archive/industry-quant-YYYY-MM-DD`, pushes it to `origin`, and deletes the local + remote branch. It refuses to run if the branch is currently checked out, doesn't exist, or already has a tag for today's date.
 
 ### Reviving an archived variant
 
-To recreate the branch from an archive — e.g., re-applying to the same firm, or referencing what you submitted:
-
 ```bash
-git checkout -b role/quant-firm-x archive/role-quant-firm-x-2026-05-12
+git checkout -b industry/quant archive/industry-quant-2026-05-12
 ```
 
 ### Listing all archives
 
 ```bash
-git tag -l "archive/role-*"
+git tag -l "archive/*"
 ```
 
-### Syncing a live role branch with template updates
+### Syncing a live variant with template updates
 
-If `industry` (or `academic`) is updated while your role branch is still active, bring the role branch up to date:
+If `industry` is updated while your variant branch is still active, bring it up to date:
 
 ```bash
-git checkout role/quant-firm-x
-git rebase industry        # or academic, whichever it was branched from
+git checkout industry/quant
+git rebase industry
 ```
 
-Rebase rather than merge: role branches are short-lived; linear history is cleaner.
+Rebase rather than merge: variant branches typically have short, linear histories that don't benefit from merge commits.
 
 ### What NOT to do
 
-- **Don't commit a role-tailored PDF to `main` or to the template branches.** The PDF lives on the role branch (and survives via the archive tag). Templates only carry their own variant's PDF.
-- **Don't let role branches accumulate un-archived.** List them periodically with `git branch | findstr "role/"` (Windows) or `git branch | grep '^  role/'` (Unix) and archive each one whose application has been settled.
+- **Don't commit a variant-tailored PDF to a template or to `main`.** The PDF lives on the variant branch (and survives via the archive tag). Templates only carry their own variant's PDF; `main` carries no PDF.
+- **Don't let variant branches accumulate un-archived.** List them periodically with `git branch | findstr "industry/\|academic/"` (Windows) or `git branch | grep -E '^  (industry|academic)/'` (Unix) and archive each one whose purpose has been served.
 
 ## Documentation
 

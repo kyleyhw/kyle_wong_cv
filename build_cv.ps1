@@ -10,7 +10,7 @@ if (-not $branch) {
     exit 1
 }
 
-# Branch names may contain '/' (e.g. role/quant-firm-x); normalise for use in a filename.
+# Branch names may contain '/' (e.g. industry/quant); normalise for use in a filename.
 $branchFile = $branch -replace '/', '-'
 
 $monthNames = @{

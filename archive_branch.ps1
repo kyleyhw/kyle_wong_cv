@@ -1,28 +1,33 @@
-# archive_role.ps1
-# Archive a role/<name> branch as a dated tag, then delete the branch (local + remote).
+# archive_branch.ps1
+# Archive a variant branch (typically industry/<role> or academic/<role>) as a
+# dated tag, then delete the branch (local + remote).
 #
-# Usage:    .\archive_role.ps1 <short-name>
-# Example:  .\archive_role.ps1 quant-firm-x
+# Usage:    .\archive_branch.ps1 <full-branch-name>
+# Examples: .\archive_branch.ps1 industry/quant
+#           .\archive_branch.ps1 industry/quantum-consulting
+#           .\archive_branch.ps1 academic/postdoc-cambridge
 #
 # Effect:
-#   - Creates tag 'archive/role-<name>-<YYYY-MM-DD>' at the branch tip
-#   - Pushes the tag to origin
-#   - Deletes the local branch
-#   - Deletes the remote branch (silently no-op if it was never pushed)
+#   - Creates tag 'archive/<branch-with-slashes-as-dashes>-<YYYY-MM-DD>'
+#     at the branch tip (e.g. industry/quant -> archive/industry-quant-<date>).
+#   - Pushes the tag to origin.
+#   - Deletes the local branch.
+#   - Deletes the remote branch (silently no-op if it was never pushed).
 #
 # Refuses to run if the branch does not exist, is currently checked out,
-# or if a tag for today's date already exists for this role name.
+# or if a tag for today's date already exists for this branch.
 #
 # To revive an archived variant later:
-#   git checkout -b role/<name> archive/role-<name>-<YYYY-MM-DD>
+#   git checkout -b <branch> archive/<branch-with-slashes-as-dashes>-<YYYY-MM-DD>
 
 param(
-    [Parameter(Mandatory=$true)][string]$Name
+    [Parameter(Mandatory=$true)][string]$Branch
 )
 
-$branch = "role/$Name"
-$date   = (Get-Date).ToString("yyyy-MM-dd")
-$tag    = "archive/role-$Name-$date"
+$branch  = $Branch
+$tagBase = $Branch -replace '/', '-'
+$date    = (Get-Date).ToString("yyyy-MM-dd")
+$tag     = "archive/$tagBase-$date"
 
 # Sanity: branch exists locally
 $exists = (git branch --list $branch | Out-String).Trim()
@@ -41,7 +46,7 @@ if ($current -eq $branch) {
 # Sanity: tag for today doesn't already exist
 $tagExists = (git tag --list $tag | Out-String).Trim()
 if ($tagExists) {
-    Write-Error "Tag '$tag' already exists. Re-archiving the same role on the same day is not supported."
+    Write-Error "Tag '$tag' already exists. Re-archiving the same branch on the same day is not supported."
     exit 1
 }
 
@@ -81,5 +86,4 @@ Write-Host ""
 Write-Host "Done. To revive this variant later:"
 Write-Host "  git checkout -b $branch $tag"
 
-# Reset exit code from the optional remote-delete step (failure there is non-fatal)
 exit 0

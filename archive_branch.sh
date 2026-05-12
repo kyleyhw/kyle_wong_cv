@@ -1,33 +1,37 @@
 #!/usr/bin/env bash
-# archive_role.sh
-# Archive a role/<name> branch as a dated tag, then delete the branch (local + remote).
+# archive_branch.sh
+# Archive a variant branch (typically industry/<role> or academic/<role>) as a
+# dated tag, then delete the branch (local + remote).
 #
-# Usage:    ./archive_role.sh <short-name>
-# Example:  ./archive_role.sh quant-firm-x
+# Usage:    ./archive_branch.sh <full-branch-name>
+# Examples: ./archive_branch.sh industry/quant
+#           ./archive_branch.sh industry/quantum-consulting
+#           ./archive_branch.sh academic/postdoc-cambridge
 #
 # Effect:
-#   - Creates tag 'archive/role-<name>-<YYYY-MM-DD>' at the branch tip
-#   - Pushes the tag to origin
-#   - Deletes the local branch
-#   - Deletes the remote branch (silently no-op if it was never pushed)
+#   - Creates tag 'archive/<branch-with-slashes-as-dashes>-<YYYY-MM-DD>' at the
+#     branch tip (e.g. industry/quant -> archive/industry-quant-<date>).
+#   - Pushes the tag to origin.
+#   - Deletes the local branch.
+#   - Deletes the remote branch (silently no-op if it was never pushed).
 #
-# Refuses to run if the branch does not exist, is currently checked out,
-# or if a tag for today's date already exists for this role name.
+# Refuses to run if the branch does not exist, is currently checked out, or if
+# a tag for today's date already exists for this branch.
 #
 # To revive an archived variant later:
-#   git checkout -b role/<name> archive/role-<name>-<YYYY-MM-DD>
+#   git checkout -b <branch> archive/<branch-with-slashes-as-dashes>-<YYYY-MM-DD>
 
 set -euo pipefail
 
 if [ $# -ne 1 ]; then
-    echo "Usage: $0 <short-name>" >&2
+    echo "Usage: $0 <full-branch-name>" >&2
     exit 1
 fi
 
-name="$1"
-branch="role/${name}"
+branch="$1"
+tag_base=$(echo "$branch" | tr '/' '-')
 date=$(date +%Y-%m-%d)
-tag="archive/role-${name}-${date}"
+tag="archive/${tag_base}-${date}"
 
 # Sanity: branch exists locally
 if [ -z "$(git branch --list "$branch")" ]; then
@@ -44,7 +48,7 @@ fi
 
 # Sanity: tag for today doesn't already exist
 if [ -n "$(git tag --list "$tag")" ]; then
-    echo "Tag '$tag' already exists. Re-archiving the same role on the same day is not supported." >&2
+    echo "Tag '$tag' already exists. Re-archiving the same branch on the same day is not supported." >&2
     exit 1
 fi
 
