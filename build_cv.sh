@@ -13,7 +13,7 @@ if [ -z "$branch" ]; then
     exit 1
 fi
 
-# Branch names may contain '/' (e.g. industry/quant); normalise for filename.
+# Branch names may contain '/' (e.g. on legacy branches); normalise for filename.
 branch_file=$(echo "$branch" | tr '/' '-')
 
 month=$(date +%b | tr '[:upper:]' '[:lower:]')
