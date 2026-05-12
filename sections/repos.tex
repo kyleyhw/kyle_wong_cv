@@ -1,4 +1,22 @@
-% Variant-specific section. Defined here as an empty stub on main.
-% Each variant branch overrides this file with its own
-% \newcommand{\sectionRepos}{...} containing variant-specific content.
-\newcommand{\sectionRepos}{}
+\newcommand{\sectionRepos}{
+\section*{FEATURED PERSONAL PROJECTS}
+
+\textbf{mercury\_strategies} [Private Repository] (work in progress)
+\begin{itemize}
+    \item Developed an event-driven engine for capturing alpha in weather-derivative prediction markets (Polymarket), managing a dockerized infrastructure on AWS with integrated risk management. Features a provider-agnostic collection and analysis layer, asynchronous watcher architecture for real-time signal generation, and automated execution with velocity rotation, local orderbook tracking, and risk-aware position sizing via the Kelly Criterion. Includes 4 months of manual prediction market trading to gain market knowledge, intuition, and experience.
+\end{itemize}
+
+\vspace{0.5em}
+
+\textbf{quant\_core} (\url{https://github.com/kyleyhw/quant_core})
+\begin{itemize}
+    \item Developed an open-core algorithmic trading platform with a flexible, modular architecture for strategy development and automated execution via Interactive Brokers (IBKR). Features a comprehensive backtesting engine with high-efficiency data caching and integrated risk management.
+\end{itemize}
+
+\vspace{0.5em}
+
+\textbf{agent\_evolve} (\url{https://github.com/kyleyhw/agent-evolve})
+\begin{itemize}
+    \item Created a multi-model, cooperative evolutionary code-optimisation agent skill. Supervisor, explorer, and reviewer roles can each be filled by any LLM through CLI, with candidates evolving on isolated git branches. Features interactive visualization and surfaces the winner as a pull request for human approval.
+\end{itemize}
+}
