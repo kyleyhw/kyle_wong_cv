@@ -10,7 +10,7 @@
 
 \textbf{sound\_simulation} (\url{https://github.com/kyleyhw/sound_simulation})
 \begin{itemize}
-    \item Engineered an N-dimensional Finite-Difference Time-Domain (FDTD) simulator in Python that solves the acoustic wave equation via central-difference discretisation, with hard-wall boundary conditions, arbitrary source waveforms, and an interactive Matplotlib UI for placing obstacles, drivers, and sensors. Trained a 1D CNN in PyTorch on simulated sensor timeseries to perform echolocation-based room mapping.
+    \item Engineered an N-dimensional Finite-Difference Time-Domain (FDTD) simulator in Python that solves the acoustic wave equation via an explicit leap-frog scheme on a Cartesian grid, with CFL-enforced stability, hard-wall boundary conditions, arbitrary driver waveforms, and sensor arrays. Accelerated the 2D stencil kernel with a fused numba-JIT pass using prange parallelism for a roughly $65\times$ speedup over the SciPy baseline.
 \end{itemize}
 
 \vspace{0.5em}
