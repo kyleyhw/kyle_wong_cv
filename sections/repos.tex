@@ -10,7 +10,7 @@
 
 \textbf{sound\_simulation} (\url{https://github.com/kyleyhw/sound_simulation})
 \begin{itemize}
-    \item A numerical simulation of physical waves in N-dimensions, implemented in Python. The simulation allows for the creation of physical boundaries and obstacles, and models their interaction with the waves. Future work aims to use this simulation to generate training data for machine learning models.
+    \item Engineered an N-dimensional Finite-Difference Time-Domain (FDTD) simulator in Python that solves the acoustic wave equation via central-difference discretisation, with hard-wall boundary conditions, arbitrary source waveforms, and an interactive Matplotlib UI for placing obstacles, drivers, and sensors. Trained a 1D CNN in PyTorch on simulated sensor timeseries to perform echolocation-based room mapping.
 \end{itemize}
 
 \vspace{0.5em}
