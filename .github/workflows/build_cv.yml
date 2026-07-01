@@ -1,16 +1,11 @@
 name: Build CV (industry)
 
+# Automatic builds are DISABLED. The CV PDF is built locally with build_cv.sh
+# and committed manually. Trigger a build by hand from the Actions tab
+# ("Run workflow") if needed, or restore a `push:` trigger to re-enable
+# automatic builds.
 on:
-  push:
-    paths:
-      - 'main.tex'
-      - 'sections/**'
-      - 'references.bib'
-      - '.github/workflows/build_cv.yml'
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 jobs:
   build:
@@ -18,8 +13,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref_name }}
 
       - name: Build PDF
         uses: xu-cheng/latex-action@v3
@@ -28,39 +21,14 @@ jobs:
 
       - name: Rename PDF by branch
         run: |
-          BRANCH_FILE="${GITHUB_REF_NAME//\//-}"
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          BRANCH_FILE="${BRANCH//\//-}"
           MONTH=$(date +%b | tr '[:upper:]' '[:lower:]')
           YEAR=$(date +%Y)
-          TARGET="kyle_wong_cv_${MONTH}_${YEAR}_${BRANCH_FILE}.pdf"
-          mv main.pdf "$TARGET"
-          echo "TARGET=$TARGET" >> "$GITHUB_ENV"
-          echo "BRANCH_FILE=$BRANCH_FILE" >> "$GITHUB_ENV"
+          mv main.pdf "kyle_wong_cv_${MONTH}_${YEAR}_${BRANCH_FILE}.pdf"
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: cv-pdf
-          path: ${{ env.TARGET }}
-
-      - name: Commit rebuilt PDF back to branch
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # Stage the freshly built PDF and drop any older dated PDFs for this branch
-          git add "$TARGET"
-          for f in $(git ls-files '*.pdf'); do
-            case "$f" in
-              kyle_wong_cv_*_${BRANCH_FILE}.pdf)
-                if [ "$f" != "$TARGET" ]; then git rm -q -f "$f"; fi ;;
-            esac
-          done
-          # The commit only ever touches *.pdf, which is excluded from the push
-          # trigger above, so committing back cannot retrigger this workflow.
-          # [skip ci] is a second, belt-and-suspenders guard.
-          if git diff --cached --quiet; then
-            echo "PDF unchanged; nothing to commit."
-          else
-            git commit -m "ci: rebuild ${TARGET} [skip ci]"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
-          fi
+          path: kyle_wong_cv_*.pdf
