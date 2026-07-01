@@ -4,6 +4,8 @@ This repository contains the LaTeX source and compiled PDFs for my curriculum vi
 
 For build instructions, editing guidance, and the full directory layout, see the [main README](../README.md).
 
+For a candid assessment of the industry/quant CV, a tiered list of target firms, and a realistic odds analysis, see [Industry (Quant) CV: Assessment, Target Firms & Odds](quant_job_strategy.md).
+
 ## Compiled PDFs
 
 Compiled PDFs live on the **variant branches**, not on `main`. Each variant branch carries its own built PDF named `kyle_wong_cv_<month>_<year>_<branch>.pdf`.
