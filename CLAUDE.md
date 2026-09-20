@@ -113,9 +113,20 @@ no-op, and `\setlist{nosep}` zeroes `parsep`, so blank lines between `\item`s
 do nothing either.
 
 Multi-column sections use `\begin{cvcolumns}{2}`, not `multicols` directly. It
-zeroes `\topskip` for the columns, which otherwise seats each column's first
-baseline ~3pt below the rhythm. This replaced the old `\vspace{-1em}` hack in
-`sections/courses.tex`.
+sets `\topskip` to `\ht\strutbox` for the columns, replacing the old
+`\vspace{-1em}` hack in `sections/courses.tex`. Default `\topskip` (10pt) put
+SELECTED COURSES ~3pt below the rhythm; setting it to `0pt` fixes that but
+lets each column's first baseline follow its own first line's height, which
+knocks the two columns ~0.6pt out of alignment with each other. A strut height
+is at least as tall as any normal line, so both columns are forced onto the
+same baseline. The cost is that SELECTED COURSES' heading gap runs ~1pt looser
+(13.54pt) than other sections — cross-column alignment is worth more than that.
+
+Known residues, all sub-perceptual and content-driven rather than rule-driven:
+heading → first content varies 12.04–12.66pt because it depends on the height
+of the first line's tallest glyph; a line inside a wrapped bullet sits the same
+1.0 line from its neighbour as two separate bullets do, so the bullet marker is
+the only cue distinguishing them (a consequence of `nosep`, and deliberate).
 
 ## Naming conventions
 
