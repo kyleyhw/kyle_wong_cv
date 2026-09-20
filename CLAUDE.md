@@ -57,8 +57,12 @@ git checkout --theirs sections/research.tex && git add sections/research.tex && 
 
 Any structural change must preserve byte-identical PDF output for the existing template variants. Baselines:
 
-- `industry`: 144074 bytes, 2 pages
-- `academic`: 154563 bytes, 3 pages
+- `industry`: 138996 bytes, 2 pages
+- `academic`: 148195 bytes, 3 pages
+
+(Re-measured 2026-09-20 with TeX Live 2023. The previously documented 144074 /
+154563 predate later content edits. `industry-quant` intentionally departs from
+`industry` — see Vertical spacing below.)
 
 Verify after any non-trivial edit:
 
@@ -71,9 +75,38 @@ pdfinfo <pdf> | Select-String "Pages:"                            # must match b
 PDF SHA-256 hashes will differ from baselines because pdflatex embeds non-deterministic `/ID` and `/CreationDate` metadata — that is expected, not a regression. Identical file size + identical `pdftotext -layout` output + identical page count is the bar.
 
 When editing or extracting section files, preserve byte-for-byte:
-- Every trailing `%` at end of line (suppresses the newline — load-bearing for layout; especially `sections/courses.tex` lines 1–2 which use `%` to control `\vspace{-1em}` interaction).
-- Blank lines inside `\newcommand{...}` bodies (they become `\par` tokens and produce inter-entry vertical spacing).
+- Every trailing `%` at end of line (suppresses the newline — load-bearing for layout).
 - Indentation inside `itemize` environments.
+
+## Vertical spacing is rule-driven
+
+**This currently applies to `industry-quant` only; it still needs to be lifted
+to `main` and propagated to the other variants.**
+
+All vertical space is declared in `main.tex` under "Vertical rhythm" and is
+explicit and rigid, so gaps never vary with list membership or with how full a
+page is. Three levels, all multiples of `\baselineskip` (11.955pt at 10pt):
+
+| Level | Gap | Mechanism |
+|---|---|---|
+| bullet → bullet | 1.0 line (11.96pt) | automatic — `\setlist{nosep}` means lists add nothing |
+| entry → entry | 1.5 lines (17.93pt) | `\cventrygap` |
+| section → section | 2.0 lines (23.91pt) | `\cvSectionGap`, via `\titlespacing` |
+
+To retune spacing, edit the three lengths in `main.tex`. Never add a bare
+`\vspace`, a trailing `\\`, or blank lines to a section file to create space —
+that is how the pre-rule CV ended up with three different entry gaps (18.16 /
+23.14 / 23.91pt) for the same level of hierarchy.
+
+Blank lines in section files are for readability only and produce no space:
+after `\end{itemize}` TeX is already in vertical mode, so the extra `\par` is a
+no-op, and `\setlist{nosep}` zeroes `parsep`, so blank lines between `\item`s
+do nothing either.
+
+Multi-column sections use `\begin{cvcolumns}{2}`, not `multicols` directly. It
+zeroes `\topskip` for the columns, which otherwise seats each column's first
+baseline ~3pt below the rhythm. This replaced the old `\vspace{-1em}` hack in
+`sections/courses.tex`.
 
 ## Naming conventions
 

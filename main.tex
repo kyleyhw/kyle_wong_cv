@@ -25,9 +25,29 @@
 \usepackage{multicol}
 
 % Formatting
-\setlist{noitemsep} % Removes item separation
+% --- Vertical rhythm --------------------------------------------------
+% Every vertical gap is explicit and rigid, so spacing never varies with
+% list membership or with how full a page is. Three levels, all multiples
+% of \baselineskip (11.955pt at 10pt):
+%   bullet  -> bullet    1.0 line   (automatic; lists add nothing)
+%   block   -> block     1.5 lines  (\cventrygap) -- entry to entry,
+%                                   and an entry's header to its bullets
+%   section -> section   2.0 lines  (\cvSectionGap, via \titlespacing)
+% Do not add bare \vspace, trailing \\ or blank lines to create space in
+% sections/*.tex -- use \cventrygap so every gap stays accountable here.
+\setlist{nosep}               % lists contribute no vertical space of their own
+\setlength{\multicolsep}{0pt} % nor does multicols
+\newlength{\cvEntryGap}   \setlength{\cvEntryGap}{6pt}   % block -> block
+\newlength{\cvSectionGap} \setlength{\cvSectionGap}{10pt} % before a section
+\newlength{\cvHeadGap}    \setlength{\cvHeadGap}{5pt}    % rule -> first content
+\newcommand{\cventrygap}{\par\vspace{\cvEntryGap}}
+% multicol seats each column's first baseline on \topskip (10pt), which
+% overrides the rhythm; zero it for the duration of the columns only.
+\newenvironment{cvcolumns}[1]%
+  {\begingroup\setlength{\topskip}{0pt}\begin{multicols}{#1}}%
+  {\end{multicols}\endgroup}
 \titleformat{\section}{\large\bfseries}{\thesection}{1em}{}[\titlerule] % Section title format
-\titlespacing*{\section}{0pt}{0.5em}{0.5em} % Section title spacing
+\titlespacing*{\section}{0pt}{\cvSectionGap}{\cvHeadGap} % Section title spacing
 \setlength{\parindent}{0pt} % Removes indent
 \newdateformat{monthyeardate}{% Date formatting for header
   \monthname[\THEMONTH] \THEYEAR}
