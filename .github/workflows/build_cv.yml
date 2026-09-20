@@ -1,14 +1,19 @@
 name: Build CV (industry)
 
-# Automatic builds are DISABLED. The CV PDF is built locally with build_cv.sh
-# and committed manually. Trigger a build by hand from the Actions tab
-# ("Run workflow") if needed, or restore a `push:` trigger to re-enable
-# automatic builds.
+# PDF builds remain manual: the CV is built locally with build_cv.sh and the
+# PDF committed by hand. The `build` job below stays dispatch-only and nothing
+# here commits to the repository.
+#
+# The `verify` job does run on push. It builds and inspects the result to
+# assert the page budget, produces no artifact, and changes nothing.
 on:
   workflow_dispatch:
+  push:
+    branches: [industry]
 
 jobs:
   build:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
