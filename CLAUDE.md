@@ -89,23 +89,37 @@ page is. Three levels, all multiples of `\baselineskip` (11.955pt at 10pt):
 
 | Level | Gap | Mechanism |
 |---|---|---|
-| inside an entry — line to line, header to its bullets, bullet to bullet | 1.0 line (11.96pt) | automatic — `\setlist{nosep}` means lists add nothing |
-| section heading → its first content | ~1.0 line (12.0–12.7pt) | `\cvHeadGap` |
-| entry → entry | 1.5 lines (17.93pt) | `\cventrygap` |
-| section → section | 2.0 lines (23.91pt) | `\cvSectionGap`, via `\titlespacing` |
+| line → line inside a paragraph | 1.00 line (11.96pt) | leading; not adjustable |
+| bullet → bullet | 1.00 line (11.96pt) | `\setlist{nosep}` — lists add nothing |
+| entry header → its own bullets | 1.25 lines (14.95pt) | `\cvlistgap` |
+| section heading → its first content | ~1.35 lines (16.0–16.6pt) | `\cvHeadGap` |
+| entry → entry | 1.67 lines (19.93pt) | `\cventrygap` |
+| section → section | 2.17 lines (25.91pt) | `\cvSectionGap`, via `\titlespacing` |
 
-**These levels must not invert.** Anything sitting inside an entry is closer
-than the gap separating two entries, which is closer than the gap separating
-two sections. An entry's bullets belong to that entry, so they sit at the
-1.0-line level — putting them at 1.5 lines makes a heading look less attached
-to its own list than to the section above it.
+Two failure modes, both of which this CV has actually had:
+
+**Levels must not invert.** Anything inside an entry has to be closer than the
+gap separating two entries, which has to be closer than the gap separating two
+sections. The pre-rule CV set entry headers further from their own bullets
+(18.15pt) than from the section heading above them (12.66pt), which made the
+bullets look like they belonged to the section rather than to their header.
+
+**Levels must not collapse.** Putting an entry's bullets, the bullet-to-bullet
+gap and the section-heading gap all at 1.0 line is perfectly *consistent* and
+reads as cramped, because nothing inside a section is articulated — a heading
+ends up no better separated from its content than two wrapped lines of one
+sentence. Keep the levels distinct and ordered, not merely equal.
+
+Spacing also has to be spent, not just saved. Retiring `\topsep` reclaimed
+~48pt on page 1; left unspent that made the CV denser *and* gave it a
+half-empty page. The values above put it back, landing page 1 at 4.5pt of
+slack (the pre-rule CV had 6.2pt). Check page fill after retuning, not just
+the gaps.
 
 To retune spacing, edit the three lengths in `main.tex`. Never add a bare
 `\vspace`, a trailing `\\`, or blank lines to a section file to create space —
 that is how the pre-rule CV ended up with three different entry gaps (18.16 /
-23.14 / 23.91pt) for the same level of hierarchy, and with entry headers set
-further from their own bullets (18.15pt) than from the section heading above
-them (12.66pt).
+23.14 / 23.91pt) for the same level of hierarchy.
 
 Blank lines in section files are for readability only and produce no space:
 after `\end{itemize}` TeX is already in vertical mode, so the extra `\par` is a
@@ -120,7 +134,7 @@ lets each column's first baseline follow its own first line's height, which
 knocks the two columns ~0.6pt out of alignment with each other. A strut height
 is at least as tall as any normal line, so both columns are forced onto the
 same baseline. The cost is that SELECTED COURSES' heading gap runs ~1pt looser
-(13.54pt) than other sections — cross-column alignment is worth more than that.
+(17.54pt) than other sections — cross-column alignment is worth more than that.
 
 Known residues, all sub-perceptual and content-driven rather than rule-driven:
 heading → first content varies 12.04–12.66pt because it depends on the height
