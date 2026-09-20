@@ -1,14 +1,19 @@
 name: Build CV (industry-quant)
 
-# Automatic builds are DISABLED. The CV PDF is built locally with build_cv.sh
-# and committed manually. Trigger a build by hand from the Actions tab
-# ("Run workflow") if needed, or restore a `push:` trigger to re-enable
-# automatic builds.
+# PDF builds remain manual: the CV is built locally with build_cv.sh and the
+# PDF committed by hand. The `build` job below stays dispatch-only and nothing
+# here commits to the repository.
+#
+# The `verify` job does run on push. It builds and inspects the result to
+# assert the page budget, produces no artifact, and changes nothing.
 on:
   workflow_dispatch:
+  push:
+    branches: [industry-quant]
 
 jobs:
   build:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,3 +37,61 @@ jobs:
         with:
           name: cv-pdf
           path: kyle_wong_cv_*.pdf
+
+  verify:
+    name: Page budget
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+
+      - name: Assert page count and that no page overruns the text block
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+          python3 - <<'CHECK'
+          import re, subprocess, sys
+
+          # Page count alone is too weak: content overruns the text block
+          # before it forces an extra page, so a pages-only assertion passes a
+          # layout that is already broken. Assert both.
+          EXPECTED = 2
+          MARGIN_PT = 54.0  # 0.75in, per \geometry in main.tex
+
+          pages = int(subprocess.run(["pdfinfo", "main.pdf"], capture_output=True,
+                                     text=True, check=True
+                                     ).stdout.split("Pages:")[1].split()[0])
+          bbox = subprocess.run(["pdftotext", "-bbox", "main.pdf", "-"],
+                                capture_output=True, text=True, check=True).stdout
+          height = float(re.search(r'height="([\d.]+)"', bbox).group(1))
+          floor = height - MARGIN_PT
+
+          worst = None
+          for idx, page in enumerate(bbox.split("<page")[1:], 1):
+              words = re.findall(
+                  r'<word xMin="[\d.]+" yMin="[\d.]+" xMax="[\d.]+" yMax="([\d.]+)"[^>]*>([^<]*)</word>',
+                  page)
+              # fancyhdr sets the page number in the bottom margin by design,
+              # so it is not an overrun. Drop a word below the text block that
+              # is exactly this page's number; anything else there has spilled.
+              body = [float(y) for y, t in words
+                      if not (float(y) > floor and t.strip() == str(idx))]
+              if not body:
+                  continue
+              slack = floor - max(body)
+              if worst is None or slack < worst[1]:
+                  worst = (idx, slack)
+
+          print(f"pages={pages} (expected {EXPECTED}); "
+                f"tightest page={worst[0]} slack={worst[1]:.1f}pt")
+          if pages != EXPECTED:
+              sys.exit(f"::error::expected {EXPECTED} page(s), built {pages}")
+          if worst[1] < 0:
+              sys.exit(f"::error::page {worst[0]} overruns the text block by "
+                       f"{-worst[1]:.1f}pt")
+          CHECK
