@@ -57,8 +57,13 @@ git checkout --theirs sections/research.tex && git add sections/research.tex && 
 
 Any structural change must preserve byte-identical PDF output for the existing template variants. Baselines:
 
-- `industry`: 144074 bytes, 2 pages
-- `academic`: 154563 bytes, 3 pages
+- `industry`: 138996 bytes, 2 pages
+- `academic`: 148195 bytes, 3 pages
+
+(Re-measured 2026-09-20 against TeX Live 2023 and reproduced byte-for-byte from
+a clean checkout. The previously documented 144074 / 154563 predate later
+content edits. These are the figures *before* either branch rebases onto the
+vertical rhythm below — that rebase relayouts both, so re-measure afterwards.)
 
 Verify after any non-trivial edit:
 
@@ -71,9 +76,79 @@ pdfinfo <pdf> | Select-String "Pages:"                            # must match b
 PDF SHA-256 hashes will differ from baselines because pdflatex embeds non-deterministic `/ID` and `/CreationDate` metadata — that is expected, not a regression. Identical file size + identical `pdftotext -layout` output + identical page count is the bar.
 
 When editing or extracting section files, preserve byte-for-byte:
-- Every trailing `%` at end of line (suppresses the newline — load-bearing for layout; especially `sections/courses.tex` lines 1–2 which use `%` to control `\vspace{-1em}` interaction).
-- Blank lines inside `\newcommand{...}` bodies (they become `\par` tokens and produce inter-entry vertical spacing).
+- Every trailing `%` at end of line (suppresses the newline — load-bearing for layout).
 - Indentation inside `itemize` environments.
+
+Blank lines inside `\newcommand{...}` bodies are no longer load-bearing: under
+`\setlist{nosep}` their `\par` produces no space. Entry separation now comes
+from `\cventrygap` alone. Do not reintroduce blank lines or bare `\vspace` to
+create space — see below.
+
+## Vertical spacing is rule-driven
+
+All vertical space is declared in `main.tex` under "Vertical rhythm" and is
+explicit and rigid, so gaps never vary with list membership or with how full a
+page is. The levels, all measured against `\baselineskip` (11.955pt at 10pt):
+
+| Level | Gap | Mechanism |
+|---|---|---|
+| line → line inside a paragraph | 1.00 line (11.96pt) | leading; not adjustable |
+| bullet → bullet | 1.00 line (11.96pt) | `\setlist{nosep}` — lists add nothing |
+| entry header → its own bullets | 1.25 lines (14.95pt) | `\cvlistgap` |
+| section heading → its first content | ~1.35 lines (16.0–16.6pt) | `\cvHeadGap` |
+| entry → entry | 1.67 lines (19.93pt) | `\cventrygap` |
+| section → section | 2.17 lines (25.91pt) | `\cvSectionGap`, via `\titlespacing` |
+
+Two failure modes, both of which this CV has actually had:
+
+**Levels must not invert.** Anything inside an entry has to be closer than the
+gap separating two entries, which has to be closer than the gap separating two
+sections. The pre-rule CV set entry headers further from their own bullets
+(18.15pt) than from the section heading above them (12.66pt), which made the
+bullets look like they belonged to the section rather than to their header.
+
+**Levels must not collapse.** Putting an entry's bullets, the bullet-to-bullet
+gap and the section-heading gap all at 1.0 line is perfectly *consistent* and
+reads as cramped, because nothing inside a section is articulated — a heading
+ends up no better separated from its content than two wrapped lines of one
+sentence. Keep the levels distinct and ordered, not merely equal.
+
+Spacing also has to be spent, not just saved. Retiring `\topsep` reclaimed
+~48pt on page 1; left unspent that made the CV denser *and* gave it a
+half-empty page. The values above put it back. Check page fill after retuning,
+not just the gaps.
+
+To retune spacing, edit the four lengths in `main.tex`. Never add a bare
+`\vspace`, a trailing `\\`, or blank lines to a section file to create space —
+that is how the pre-rule CV ended up with three different entry gaps (18.16 /
+23.14 / 23.91pt) for the same level of hierarchy.
+
+Multi-column sections use `\begin{cvcolumns}{2}`, not `multicols` directly. It
+sets `\topskip` to `\ht\strutbox` for the columns, replacing the old
+`\vspace{-1em}` hack in `sections/courses.tex`. Default `\topskip` (10pt) put
+SELECTED COURSES ~3pt below the rhythm; setting it to `0pt` fixes that but
+lets each column's first baseline follow its own first line's height, which
+knocks the two columns ~0.6pt out of alignment with each other. A strut height
+is at least as tall as any normal line, so both columns are forced onto the
+same baseline. The cost is that SELECTED COURSES' heading gap runs ~1pt looser
+(17.54pt) than other sections — cross-column alignment is worth more than that.
+
+### Variants must be migrated before they rebase
+
+The machinery lives on `main`, but it only *removes* the old implicit spacing;
+it cannot know where a variant wants its gaps. A variant whose section files
+still lean on list defaults and blank lines loses its entry separation the
+moment it rebases. Measured on 2026-09-20 by test-rebasing onto this commit:
+`industry` (138996 → 138967 bytes) and `academic` (148195 → 148169 bytes) both
+keep their page counts and their text, but their RESEARCH EXPERIENCE and
+FEATURED PERSONAL PROJECTS entries run together — the collapse failure above.
+
+`industry-quant` is migrated and is the reference for what migration means:
+every inter-entry gap in `sections/research.tex`, `sections/repos.tex` and
+`sections/education.tex` is an explicit `\cventrygap`, and every
+header-to-bullets gap an explicit `\cvlistgap`. Migrate a variant's own
+section files that way, rebuild, and re-measure its baseline before treating
+its rebase as done.
 
 ## Naming conventions
 
