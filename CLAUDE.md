@@ -181,6 +181,72 @@ invariant, and re-measure the branch's baseline above.
 
 `.github/workflows/build_cv.yml` lives on each variant branch (not on `main`, since `main` doesn't build a complete CV). The workflow's `name:` field reflects the branch (e.g. `Build CV (industry-quant)`); update this field manually when creating a new variant branch.
 
+It holds two jobs. `build` produces a PDF artifact and is gated to
+`workflow_dispatch`, so PDFs are still built locally with `build_cv.sh` and
+committed by hand. `verify` runs on push and is described below.
+
+### Page budget check
+
+`verify` builds `main.tex` in the runner and reports two things: whether the CV
+came out at its expected page count, and whether any page's body text overran
+the text block. It is **advisory** — it emits `::warning::` annotations and a
+job-summary section, and always exits 0. It never fails a run, produces no
+artifact, and writes nothing to the repository; the committed PDF is not read
+and not touched.
+
+Expected page counts, set per branch by the `EXPECTED` constant in the job:
+
+| Branch | Pages | Slack on its tightest page |
+|---|---|---|
+| `tutoring` | 1 | 10.0pt |
+| `industry` | 2 | 1.0pt |
+| `industry-quant` | 2 | 1.0pt |
+| `academic` | 3 | 80.7pt |
+
+**Why it measures the margin and not just the page count.** Content overruns
+the text block before it forces an extra page, so a page-count assertion alone
+passes a layout that is already broken. This is not hypothetical: a simulated
+rebase that auto-merged one shared course into `tutoring`'s trimmed
+`sections/courses.tex` produced a *one-page* PDF whose body ran 2.0pt into the
+bottom margin, with no conflict, no overfull box, and the right page count.
+
+**Why the page number is discounted.** `fancyhdr` sets the folio in the bottom
+margin by design, 33.4pt below the text block, so on any multi-page CV the
+lowest "text" on the page is the page number rather than body content. The
+check drops a word below the text block that is exactly that page's number and
+treats anything else down there as spilled body text. Without that, every
+multi-page variant fails immediately and spuriously.
+
+**When it fires.** Rebuild locally with `build_cv.sh` and compare before
+acting. Two causes are likely. Either the layout genuinely changed, or a rebase
+from `main` auto-merged shared content into a section file the variant
+overrides — see *Shared-file overrides* below. A third possibility is neither:
+page breaks depend on the TeX distribution, and the runner's need not match the
+one the committed PDF was built with, which is why this check advises rather
+than blocks.
+
+**What it does not cover.** It rebuilds from source and never compares against
+the committed PDF, so a stale committed PDF passes. It does not check content,
+and it does not catch overfull *hboxes*.
+
+### Shared-file overrides
+
+A variant may override one of the nine tier-1 shared section files when the
+shared version does not suit it — `tutoring` overrides
+`sections/relevant_experience.tex` and `sections/courses.tex`. Rebasing such a
+branch onto `main` behaves in one of two ways, and the difference matters:
+
+- **Conflicts loudly** when the override replaces the whole file body, as
+  `relevant_experience.tex` does. Resolve by keeping the variant's version
+  (`git checkout --theirs` during a rebase onto `main`).
+- **Auto-merges silently** when the override is a subset or light edit of
+  `main`'s version, as `courses.tex` is — a trimmed list in the same order.
+  Git merges upstream additions straight in, with no conflict to notice.
+
+The second case is what the page budget check exists to catch. Any file
+overridden this way should say so in a header comment, naming which behaviour
+to expect.
+
 ## Prerequisites
 
 `pdflatex` from MiKTeX (Windows, tested 24.1) or TeX Live / MacTeX (macOS/Linux). MiKTeX prompts to install missing packages on first compile. `pdftotext` and `pdfinfo` from Poppler (bundled with MiKTeX; `brew install poppler` on macOS; `apt install poppler-utils` on Linux) are needed for PDF identity verification.
