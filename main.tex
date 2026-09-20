@@ -27,23 +27,31 @@
 % Formatting
 % --- Vertical rhythm --------------------------------------------------
 % Every vertical gap is explicit and rigid, so spacing never varies with
-% list membership or with how full a page is. Three levels, all multiples
-% of \baselineskip (11.955pt at 10pt):
-%   within an entry      1.0 line   (automatic; lists add nothing) --
-%                                   line to line, header to its bullets,
-%                                   and bullet to bullet
-%   entry   -> entry     1.5 lines  (\cventrygap)
-%   section -> section   2.0 lines  (\cvSectionGap, via \titlespacing)
-% Gaps must not invert: whatever sits inside an entry is closer than the gap
-% separating two entries, which is closer than the gap separating sections.
+% list membership or with how full a page is. Five levels, closest first
+% (\baselineskip is 11.955pt at 10pt):
+%   line    -> line          1.00 line    11.96pt   leading, not adjustable
+%   bullet  -> bullet        1.00 line    11.96pt   \setlist{nosep}
+%   header  -> its bullets   1.25 lines   14.95pt   \cvlistgap
+%   heading -> its content   ~1.35 lines  16.1-16.6 \cvHeadGap
+%   entry   -> entry         1.67 lines   19.93pt   \cventrygap
+%   section -> section       2.17 lines   25.91pt   \cvSectionGap
+% Two failure modes, both of which this CV has had. Gaps must not INVERT:
+% whatever sits inside an entry has to be closer than the gap separating two
+% entries, which has to be closer than the gap separating sections. And they
+% must not COLLAPSE: four levels all sitting at 1.0 line is perfectly
+% consistent and reads as cramped, because nothing inside a section is
+% articulated. Keep the levels distinct and ordered.
 % Do not add bare \vspace, trailing \\ or blank lines to create space in
-% sections/*.tex -- use \cventrygap so every gap stays accountable here.
+% sections/*.tex -- use \cventrygap and \cvlistgap so every gap stays
+% accountable here.
 \setlist{nosep}               % lists contribute no vertical space of their own
 \setlength{\multicolsep}{0pt} % nor does multicols
-\newlength{\cvEntryGap}   \setlength{\cvEntryGap}{6pt}   % entry -> entry
-\newlength{\cvSectionGap} \setlength{\cvSectionGap}{10pt} % before a section
-\newlength{\cvHeadGap}    \setlength{\cvHeadGap}{5pt}    % rule -> first content
+\newlength{\cvEntryGap}   \setlength{\cvEntryGap}{8pt}   % entry -> entry
+\newlength{\cvSectionGap} \setlength{\cvSectionGap}{12pt} % before a section
+\newlength{\cvHeadGap}    \setlength{\cvHeadGap}{9pt}    % rule -> first content
+\newlength{\cvListGap}   \setlength{\cvListGap}{3pt}   % header -> its bullets
 \newcommand{\cventrygap}{\par\vspace{\cvEntryGap}}
+\newcommand{\cvlistgap}{\par\vspace{\cvListGap}}
 % multicol seats each column's first baseline on \topskip (10pt), which
 % overrides the rhythm; zero it for the duration of the columns only.
 \newenvironment{cvcolumns}[1]%
