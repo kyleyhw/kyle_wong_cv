@@ -1,5 +1,20 @@
+% OVERRIDE of a tier-1 shared file. main's version lists all thirteen courses;
+% this variant carries eight because the full list does not fit the one-page
+% budget, and the heading is retitled (see below).
+%
+% Rebase hazard: because these \item lines are a subset of main's, in main's
+% order, git will often AUTO-MERGE a course added on main into this list
+% rather than raising a conflict -- silently, with no overfull warning. The
+% page budget is ~10pt, roughly one two-column row, so two absorbed courses
+% push this CV onto a second page. The CI page-count check guards against it;
+% if it fails after a rebase, a shared course has been merged in and should be
+% removed here rather than kept.
+%
+% The heading says UNIVERSITY COURSEWORK, not SELECTED COURSES, because this
+% section sits below TUTORING EXPERIENCE: "courses" alone invites reading the
+% list as courses tutored rather than courses taken.
 \newcommand{\sectionCourses}{%
-\section*{SELECTED COURSES}%
+\section*{SELECTED UNIVERSITY COURSEWORK}%
 \begin{cvcolumns}{2}
 \begin{itemize}
     \item Astrostatistics (Cambridge, 2025)

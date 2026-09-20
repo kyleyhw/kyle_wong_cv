@@ -1,3 +1,11 @@
+% OVERRIDE of a tier-1 shared file. main's version is RELEVANT EXPERIENCE --
+% teaching, professional development and a nested volunteering list. This
+% variant keeps only the teaching entry and retitles the section, since on a
+% tutoring CV that entry is the point rather than one bullet among several.
+%
+% Unlike courses.tex, this override replaces the whole body, so a rebase that
+% touches main's version conflicts loudly rather than auto-merging. Resolve by
+% keeping this version (git checkout --theirs during a rebase onto main).
 \newcommand{\sectionRelevantExperience}{
 \section*{TUTORING EXPERIENCE}
 \textbf{Private Tutor, Physics \& Mathematics} \hfill 2020 -- 2022, 2024 -- 2025
