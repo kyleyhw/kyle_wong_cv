@@ -57,13 +57,13 @@ git checkout --theirs sections/research.tex && git add sections/research.tex && 
 
 Any structural change must preserve byte-identical PDF output for the existing template variants. Baselines:
 
-- `industry`: 138996 bytes, 2 pages
-- `academic`: 148195 bytes, 3 pages
+- `industry`: 138960 bytes, 2 pages
+- `academic`: 148178 bytes, 3 pages
 
-(Re-measured 2026-09-20 against TeX Live 2023 and reproduced byte-for-byte from
-a clean checkout. The previously documented 144074 / 154563 predate later
-content edits. These are the figures *before* either branch rebases onto the
-vertical rhythm below — that rebase relayouts both, so re-measure afterwards.)
+(Measured 2026-09-20 against TeX Live 2023 and reproduced byte-for-byte from a
+clean checkout, after both branches were migrated onto the vertical rhythm
+below. The figures immediately before that migration were 138996 / 148195, and
+the 144074 / 154563 documented earlier predate later content edits.)
 
 Verify after any non-trivial edit:
 
@@ -138,17 +138,39 @@ same baseline. The cost is that SELECTED COURSES' heading gap runs ~1pt looser
 The machinery lives on `main`, but it only *removes* the old implicit spacing;
 it cannot know where a variant wants its gaps. A variant whose section files
 still lean on list defaults and blank lines loses its entry separation the
-moment it rebases. Measured on 2026-09-20 by test-rebasing onto this commit:
-`industry` (138996 → 138967 bytes) and `academic` (148195 → 148169 bytes) both
-keep their page counts and their text, but their RESEARCH EXPERIENCE and
-FEATURED PERSONAL PROJECTS entries run together — the collapse failure above.
+moment it rebases — RESEARCH EXPERIENCE and FEATURED PERSONAL PROJECTS run
+together into unbroken blocks, the collapse failure above. This was measured,
+not assumed: test-rebasing unmigrated `industry` and `academic` kept their page
+counts and their text and still produced that collapse.
 
-`industry-quant` is migrated and is the reference for what migration means:
-every inter-entry gap in `sections/research.tex`, `sections/repos.tex` and
-`sections/education.tex` is an explicit `\cventrygap`, and every
-header-to-bullets gap an explicit `\cvlistgap`. Migrate a variant's own
-section files that way, rebuild, and re-measure its baseline before treating
-its rebase as done.
+**Migrated:** `industry-quant`, `industry`, `academic`.
+**Not yet migrated:** `industry-quantum-consulting`, and any variant branched
+from a pre-migration template. Migrate before rebasing it onto `main`.
+
+Migration touches exactly three files — `sections/research.tex`,
+`sections/repos.tex`, `sections/education.tex` — for twelve call sites in
+total. They are the only sections holding multiple entries; single-list
+sections (HONOURS, LANGUAGES, MEMBERSHIPS, PERSONAL INTERESTS, SKILLS,
+PRESENTATIONS) have no inter-entry structure to lose, RELEVANT EXPERIENCE is a
+nested list that correctly takes no gap, and SELECTED COURSES is handled on
+`main` by `cvcolumns`. The three files are variant-specific, which is why they
+cannot be fixed once on `main`.
+
+The edit, per entry:
+
+- `\cvlistgap` immediately before the entry's `\begin{itemize}`. Where a
+  variant puts extra header lines before the list (academic's `Supervised
+  by …`, joined on with a trailing `\\`), the gap goes after them: it belongs
+  between the header block as a whole and its bullets.
+- `\cventrygap` at each entry boundary, *replacing* what used to make that gap
+  — the blank lines, any trailing `\\` left dangling at the end of an entry,
+  and any ad-hoc `\vspace`. Leaving the old markers in alongside the macro
+  double-counts the gap.
+
+Then rebuild, confirm the page count holds and that `pdftotext -layout` output
+is character-identical once whitespace is normalised (migration is layout-only
+and must never move content), check the rendered pages for the ordering
+invariant, and re-measure the branch's baseline above.
 
 ## Naming conventions
 
