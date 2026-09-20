@@ -1,4 +1,4 @@
-name: Build CV (industry-quant)
+name: Build CV (tutoring)
 
 # Automatic builds are DISABLED. The CV PDF is built locally with build_cv.sh
 # and committed manually. Trigger a build by hand from the Actions tab
