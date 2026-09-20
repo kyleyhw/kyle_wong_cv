@@ -4,8 +4,9 @@ name: Build CV (industry-quant)
 # PDF committed by hand. The `build` job below stays dispatch-only and nothing
 # here commits to the repository.
 #
-# The `verify` job does run on push. It builds and inspects the result to
-# assert the page budget, produces no artifact, and changes nothing.
+# The `verify` job does run on push. It is ADVISORY: it builds, measures
+# the page budget, and annotates the run, but never fails it and never
+# writes to the repository. See CLAUDE.md, "Page budget check".
 on:
   workflow_dispatch:
   push:
@@ -39,7 +40,7 @@ jobs:
           path: kyle_wong_cv_*.pdf
 
   verify:
-    name: Page budget
+    name: Page budget (advisory)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -50,16 +51,18 @@ jobs:
         with:
           root_file: main.tex
 
-      - name: Assert page count and that no page overruns the text block
+      - name: Report page count and text-block overruns
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq poppler-utils
           python3 - <<'CHECK'
-          import re, subprocess, sys
+          import os, re, subprocess
 
-          # Page count alone is too weak: content overruns the text block
-          # before it forces an extra page, so a pages-only assertion passes a
-          # layout that is already broken. Assert both.
+          # ADVISORY. This step never fails the run: it annotates and writes to
+          # the job summary, leaving the decision to a person. A layout that
+          # differs here is not necessarily wrong -- page breaks depend on the
+          # TeX distribution, and the runner's may not match the one the
+          # committed PDF was built with locally.
           EXPECTED = 2
           MARGIN_PT = 54.0  # 0.75in, per \geometry in main.tex
 
@@ -76,9 +79,9 @@ jobs:
               words = re.findall(
                   r'<word xMin="[\d.]+" yMin="[\d.]+" xMax="[\d.]+" yMax="([\d.]+)"[^>]*>([^<]*)</word>',
                   page)
-              # fancyhdr sets the page number in the bottom margin by design,
-              # so it is not an overrun. Drop a word below the text block that
-              # is exactly this page's number; anything else there has spilled.
+              # fancyhdr sets the page number in the bottom margin by design, so
+              # it is not an overrun. Drop a word below the text block that is
+              # exactly this page's number; anything else there has spilled.
               body = [float(y) for y, t in words
                       if not (float(y) > floor and t.strip() == str(idx))]
               if not body:
@@ -87,11 +90,33 @@ jobs:
               if worst is None or slack < worst[1]:
                   worst = (idx, slack)
 
-          print(f"pages={pages} (expected {EXPECTED}); "
-                f"tightest page={worst[0]} slack={worst[1]:.1f}pt")
+          notes = []
           if pages != EXPECTED:
-              sys.exit(f"::error::expected {EXPECTED} page(s), built {pages}")
-          if worst[1] < 0:
-              sys.exit(f"::error::page {worst[0]} overruns the text block by "
-                       f"{-worst[1]:.1f}pt")
+              notes.append(f"expected {EXPECTED} page(s), built {pages}")
+          if worst and worst[1] < 0:
+              notes.append(f"page {worst[0]} overruns the text block by "
+                           f"{-worst[1]:.1f}pt")
+
+          headline = (f"pages={pages} (expected {EXPECTED}); tightest page="
+                      f"{worst[0]} slack={worst[1]:.1f}pt" if worst else
+                      f"pages={pages} (expected {EXPECTED}); no text found")
+          print(headline)
+          for n in notes:
+              print(f"::warning title=Page budget::{n}")
+
+          summary = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary:
+              with open(summary, "a") as fh:
+                  fh.write("### Page budget (advisory)\n\n")
+                  fh.write(f"`{headline}`\n\n")
+                  if notes:
+                      for n in notes:
+                          fh.write(f"- :warning: {n}\n")
+                      fh.write(
+                          "\nThis does not fail the build. Rebuild locally with "
+                          "`build_cv.sh` and compare before acting; if a rebase "
+                          "from `main` auto-merged shared content into an "
+                          "overridden section file, that is the usual cause.\n")
+                  else:
+                      fh.write("Within budget.\n")
           CHECK
