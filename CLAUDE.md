@@ -89,14 +89,23 @@ page is. Three levels, all multiples of `\baselineskip` (11.955pt at 10pt):
 
 | Level | Gap | Mechanism |
 |---|---|---|
-| bullet → bullet | 1.0 line (11.96pt) | automatic — `\setlist{nosep}` means lists add nothing |
+| inside an entry — line to line, header to its bullets, bullet to bullet | 1.0 line (11.96pt) | automatic — `\setlist{nosep}` means lists add nothing |
+| section heading → its first content | ~1.0 line (12.0–12.7pt) | `\cvHeadGap` |
 | entry → entry | 1.5 lines (17.93pt) | `\cventrygap` |
 | section → section | 2.0 lines (23.91pt) | `\cvSectionGap`, via `\titlespacing` |
+
+**These levels must not invert.** Anything sitting inside an entry is closer
+than the gap separating two entries, which is closer than the gap separating
+two sections. An entry's bullets belong to that entry, so they sit at the
+1.0-line level — putting them at 1.5 lines makes a heading look less attached
+to its own list than to the section above it.
 
 To retune spacing, edit the three lengths in `main.tex`. Never add a bare
 `\vspace`, a trailing `\\`, or blank lines to a section file to create space —
 that is how the pre-rule CV ended up with three different entry gaps (18.16 /
-23.14 / 23.91pt) for the same level of hierarchy.
+23.14 / 23.91pt) for the same level of hierarchy, and with entry headers set
+further from their own bullets (18.15pt) than from the section heading above
+them (12.66pt).
 
 Blank lines in section files are for readability only and produce no space:
 after `\end{itemize}` TeX is already in vertical mode, so the extra `\par` is a

@@ -29,15 +29,18 @@
 % Every vertical gap is explicit and rigid, so spacing never varies with
 % list membership or with how full a page is. Three levels, all multiples
 % of \baselineskip (11.955pt at 10pt):
-%   bullet  -> bullet    1.0 line   (automatic; lists add nothing)
-%   block   -> block     1.5 lines  (\cventrygap) -- entry to entry,
-%                                   and an entry's header to its bullets
+%   within an entry      1.0 line   (automatic; lists add nothing) --
+%                                   line to line, header to its bullets,
+%                                   and bullet to bullet
+%   entry   -> entry     1.5 lines  (\cventrygap)
 %   section -> section   2.0 lines  (\cvSectionGap, via \titlespacing)
+% Gaps must not invert: whatever sits inside an entry is closer than the gap
+% separating two entries, which is closer than the gap separating sections.
 % Do not add bare \vspace, trailing \\ or blank lines to create space in
 % sections/*.tex -- use \cventrygap so every gap stays accountable here.
 \setlist{nosep}               % lists contribute no vertical space of their own
 \setlength{\multicolsep}{0pt} % nor does multicols
-\newlength{\cvEntryGap}   \setlength{\cvEntryGap}{6pt}   % block -> block
+\newlength{\cvEntryGap}   \setlength{\cvEntryGap}{6pt}   % entry -> entry
 \newlength{\cvSectionGap} \setlength{\cvSectionGap}{10pt} % before a section
 \newlength{\cvHeadGap}    \setlength{\cvHeadGap}{5pt}    % rule -> first content
 \newcommand{\cventrygap}{\par\vspace{\cvEntryGap}}
