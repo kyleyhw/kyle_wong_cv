@@ -1,9 +1,9 @@
-% graphicx supplies \scalebox for the agent-evolve label below. It is loaded
+% accsupp supplies \BeginAccSupp for the agent-evolve label below. It is loaded
 % here rather than in main.tex because this is the only file that needs it and
 % is already variant-specific, so the shared shell stays untouched and a sync
 % from main gains no new conflict. Safe because main.tex \inputs this file in
 % the preamble, before \begin{document}.
-\usepackage{graphicx}
+\usepackage{accsupp}
 \newcommand{\sectionRepos}{
 \section*{FEATURED PERSONAL PROJECTS}
 \textbf{mercury\_strategies} [Private Repository] (work in progress)
@@ -18,12 +18,15 @@
     \item Developed an open-core algorithmic trading platform with a flexible, modular architecture for strategy development and automated execution via Interactive Brokers (IBKR). Features a comprehensive backtesting engine with high-efficiency data caching and integrated risk management.
 \end{itemize}
 \cventrygap
-% The bold Latin Modern hyphen is 3.83pt wide, visibly narrower than the
-% monospace hyphen in the URL beside it (5.25pt). Stretching it 1.5x
-% horizontally gives 5.75pt: a touch wider than the URL's, short of a bold en dash
-% (6.02pt), and still the hyphen character, so the label copies out of the PDF
-% as agent-evolve -- the real repository name. An en dash would not.
-\textbf{agent\scalebox{1.5}[1]{-}evolve} (\url{https://github.com/kyleyhw/agent-evolve})
+% The connector is the bold underscore glyph raised to hyphen height, so it
+% matches the underscores in the mercury_strategies and quant_core labels in
+% length (8.47pt of ink) and weight (0.41pt stroke). A bold hyphen is only
+% 2.99pt long and 0.92pt thick, so beside them it read as short and heavy.
+% The 3.46pt raise moves the underscore's stroke centre from 1.25pt below the
+% baseline to the hyphen's 2.21pt above it (figures for 10pt bold Latin
+% Modern). ActualText makes it copy out of the PDF as a hyphen, so the label
+% still yields agent-evolve, the real repository name.
+\textbf{agent\BeginAccSupp{ActualText=-}\raisebox{3.46pt}{\_}\EndAccSupp{}evolve} (\url{https://github.com/kyleyhw/agent-evolve})
 \cvlistgap
 \begin{itemize}
     \item Created a multi-model, cooperative evolutionary code-optimisation agent skill. Supervisor, explorer, and reviewer roles can each be filled by any LLM through CLI, with candidates evolving on isolated git branches. Features interactive visualisation and surfaces the winner as a pull request for human approval.
