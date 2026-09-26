@@ -57,8 +57,8 @@ git checkout --theirs sections/research.tex && git add sections/research.tex && 
 
 Any structural change must preserve byte-identical PDF output for the existing template variants. Baselines:
 
-- `industry`: 139016 bytes, 2 pages
-- `academic`: 148177 bytes, 3 pages
+- `industry`: 139020 bytes, 2 pages
+- `academic`: 148180 bytes, 3 pages
 
 (Measured 2026-09-20 against TeX Live 2023 and reproduced byte-for-byte from a
 clean checkout, after both branches were migrated onto the vertical rhythm
@@ -71,7 +71,9 @@ only, with `pdftotext -layout` output unchanged. Both variants were then
 standardised on British spelling (visualisation, dockerised): `industry` kept
 its size, and `academic` moved from 148178 to 148177. `industry` then moved to
 139016 when the stretched hyphen was replaced by a raised underscore, again a
-glyph change with `pdftotext -layout` output unchanged.)
+glyph change with `pdftotext -layout` output unchanged. Both then moved -- to
+139020 and 148180 -- when the header email became a `mailto:` link, which
+changes only the link target: the render is pixel-identical.)
 
 Verify after any non-trivial edit:
 
