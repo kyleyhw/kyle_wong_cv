@@ -57,13 +57,15 @@ git checkout --theirs sections/research.tex && git add sections/research.tex && 
 
 Any structural change must preserve byte-identical PDF output for the existing template variants. Baselines:
 
-- `industry`: 138960 bytes, 2 pages
+- `industry`: 139015 bytes, 2 pages
 - `academic`: 148178 bytes, 3 pages
 
 (Measured 2026-09-20 against TeX Live 2023 and reproduced byte-for-byte from a
 clean checkout, after both branches were migrated onto the vertical rhythm
 below. The figures immediately before that migration were 138996 / 148195, and
-the 144074 / 154563 documented earlier predate later content edits.)
+the 144074 / 154563 documented earlier predate later content edits. `industry`
+moved from 138960 to 139015 on 2026-09-26 when the `agent_evolve` repo label
+was corrected to `agent-evolve`, a content edit.)
 
 Verify after any non-trivial edit:
 
