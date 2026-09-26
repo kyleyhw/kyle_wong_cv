@@ -57,7 +57,7 @@ git checkout --theirs sections/research.tex && git add sections/research.tex && 
 
 Any structural change must preserve byte-identical PDF output for the existing template variants. Baselines:
 
-- `industry`: 139072 bytes, 2 pages
+- `industry`: 139016 bytes, 2 pages
 - `academic`: 148177 bytes, 3 pages
 
 (Measured 2026-09-20 against TeX Live 2023 and reproduced byte-for-byte from a
@@ -69,7 +69,9 @@ was corrected to `agent-evolve`, a content edit, and then to 139072 the same day
 when that label's bold hyphen was widened with `\scalebox` -- a glyph change
 only, with `pdftotext -layout` output unchanged. Both variants were then
 standardised on British spelling (visualisation, dockerised): `industry` kept
-its size, and `academic` moved from 148178 to 148177.)
+its size, and `academic` moved from 148178 to 148177. `industry` then moved to
+139016 when the stretched hyphen was replaced by a raised underscore, again a
+glyph change with `pdftotext -layout` output unchanged.)
 
 Verify after any non-trivial edit:
 
