@@ -1,3 +1,17 @@
+% "Reionization" is part of a proper name, the Hydrogen Epoch of Reionization
+% Array; declaring it with no break points keeps TeX from splitting it.
+\hyphenation{Reionization}
+% Unsplittable, the word no longer fits the McGill bullet's first line, and with
+% no other acceptable break TeX ran it 11.4pt into the right margin. Emergency
+% stretch lets TeX take a third pass, allowing a looser line, for any paragraph
+% it cannot otherwise set -- so it moves "Reionization" down a line instead.
+% Paragraphs that already break cleanly are untouched; on this CV that is every
+% other paragraph. Measured: at 0.25em and 0.5em TeX also hyphenates
+% "inference" on the following line; from 0.75em up (tested to 2em) it sets the
+% paragraph with no hyphenation at all, and identically. 1em clears that
+% threshold with margin and is the conventional value. This is a preamble
+% setting, so it applies document-wide.
+\setlength{\emergencystretch}{1em}
 \newcommand{\sectionResearch}{
 \section*{RESEARCH EXPERIENCE}
 \textbf{Master of Advanced Study Research Project} \hfill Cambridge, England, United Kingdom\\
