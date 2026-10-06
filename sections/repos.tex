@@ -7,12 +7,15 @@
 % TeX's patterns allow re-view-er, and a line-end break there reads as
 % "re-viewer". Declaring the word with no break points forbids hyphenating it.
 \hyphenation{reviewer}
+% "Polymarket" is a platform name; declaring it with no break points keeps TeX
+% from splitting it across a line end.
+\hyphenation{Polymarket}
 \newcommand{\sectionRepos}{
 \section*{FEATURED PERSONAL PROJECTS}
-\textbf{mercury\_strategies} [Private Repository] (work in progress)
+\textbf{mercury\_strategies} [Private Repository] (live deployment; continued research \& development)
 \cvlistgap
 \begin{itemize}
-    \item Developed an event-driven engine for capturing alpha in weather-derivative prediction markets (Polymarket), managing a dockerised infrastructure on AWS with integrated risk management. Features a provider-agnostic collection and analysis layer, asynchronous watcher architecture for real-time signal generation, and automated execution with velocity rotation, local order book tracking, and risk-aware position sizing via the Kelly Criterion. Includes 4 months of manual prediction market trading to gain market knowledge, intuition, and experience.
+    \item Developed and deployed an event-driven engine that trades weather-derivative prediction markets (Polymarket) autonomously with live capital, running dockerised on AWS with integrated risk management. Features a provider-agnostic collection and analysis layer, asynchronous watchers for real-time signal generation, and automated execution with velocity rotation, local orderbook tracking, and risk-aware position sizing via the Kelly Criterion. Built on 4 months of manual trading to gain market knowledge, intuition, and experience.
 \end{itemize}
 \cventrygap
 \textbf{quant\_core} (\url{https://github.com/kyleyhw/quant_core})
