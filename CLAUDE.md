@@ -57,7 +57,7 @@ git checkout --theirs sections/research.tex && git add sections/research.tex && 
 
 Any structural change must preserve byte-identical PDF output for the existing template variants. Baselines:
 
-- `industry`: 139020 bytes, 2 pages
+- `industry`: 138710 bytes, 2 pages
 - `academic`: 148180 bytes, 3 pages
 
 (Measured 2026-09-20 against TeX Live 2023 and reproduced byte-for-byte from a
@@ -73,7 +73,12 @@ its size, and `academic` moved from 148178 to 148177. `industry` then moved to
 139016 when the stretched hyphen was replaced by a raised underscore, again a
 glyph change with `pdftotext -layout` output unchanged. Both then moved -- to
 139020 and 148180 -- when the header email became a `mailto:` link, which
-changes only the link target: the render is pixel-identical.)
+changes only the link target: the render is pixel-identical. On 2026-10-06
+`industry` moved to 138710, a content edit: the October rebuild changed the
+header date, `mercury_strategies` was reframed as a live deployment, and
+"reviewer", "Reionization" and "Polymarket" were declared unhyphenatable, with
+`\emergencystretch` set to 1em in `sections/research.tex` to keep the McGill
+bullet inside the margin.)
 
 Verify after any non-trivial edit:
 
